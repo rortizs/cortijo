@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="marcajesGSP" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6245c351-d229-4542-831d-6b4079fa8cd7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idEmpleados" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaInicio" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFin" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    a.*,concat(b.primerNombre,' ',b.segundoNombre,' ',b.primerApellido,' ',b.segundoApellido) as empleado
+FROM
+    marcajesGSP as a inner join hrmEmpleados as b on(a.codigoEmpleado=b.codigoEmpleado)
+WHERE
+    a.codigoEmpleado = $P{idEmpleados}
+AND DATE(a.fecha) BETWEEN $P{fechaInicio} AND $P{fechaFin}
+group by
+    a.id order by fecha asc]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="codigoEmpleado" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombreEmpleado" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idDepto" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="depto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="dia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="horaEntrada" class="java.sql.Time">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="horaSalida" class="java.sql.Time">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numeroHorasExtrasDiurnas" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numeroHorasExtrasNocturas" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="empleado" class="java.lang.String"/>
+	<variable name="numeroHorasExtrasDiurnas_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{numeroHorasExtrasDiurnas}]]></variableExpression>
+	</variable>
+	<variable name="numeroHorasExtrasNocturas_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{numeroHorasExtrasNocturas}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="87" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="572" height="20" uuid="caef6124-faaf-4f1e-859e-c88bfdbd5ec9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GLOBAL SCREEN PRINTING S.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="572" height="20" uuid="7f36f68a-6547-4475-a193-38227414c0c8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE MARCAS POR FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="179" height="20" uuid="2228edc4-87dc-4bd7-bd36-208117446054"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMPLEADO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="179" height="20" uuid="eb2c96c4-665d-4478-babd-279aea103398"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RANGO FECHA REPORTE:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="179" y="60" width="393" height="20" uuid="fb67dd6b-8389-4b1e-8511-658f85ae91d2"/>
+				<textFieldExpression><![CDATA["DEL "+$P{fechaInicio}+" AL "+$P{fechaFin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="179" y="40" width="393" height="20" uuid="8bfd25da-b70f-442e-a963-b6725034dbec"/>
+				<textFieldExpression><![CDATA[$F{codigoEmpleado}+" - "+$F{empleado}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="79" height="20" uuid="fc1be040-b563-4258-8bf2-e9f46c31ba4f"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="2" width="100" height="20" uuid="fae7ef0e-e58e-408f-8c24-fbf099826239"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="179" y="2" width="100" height="20" uuid="703d28e2-b705-44fd-a799-63d972cfcf8c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORA ENTRADA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="279" y="2" width="100" height="20" uuid="e5e8a8f0-1530-4fd7-8e58-b413a35059bf"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORA SALIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="379" y="2" width="100" height="20" uuid="e90f0d99-1578-4bfc-9360-557fb90bc9af"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HRS. EXT. DIURNAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="479" y="2" width="93" height="20" uuid="3328d8ae-a726-4075-ad42-7ad908a42d5c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HRS. EXT. NOCTURNAS]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="0" width="79" height="20" uuid="20a5700f-2da4-4ddd-91d3-74ba21a20003"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="79" y="0" width="100" height="20" uuid="89451a0a-95db-4d33-b359-925dfb81166e"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dia}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH.mm.ss">
+				<reportElement x="179" y="0" width="100" height="20" uuid="c039970f-120f-41d3-8b95-75e8dac4e223"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{horaEntrada}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH.mm.ss">
+				<reportElement x="279" y="0" width="100" height="20" uuid="94616607-eee2-438d-b530-61719aea4e9c"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{horaSalida}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="379" y="0" width="100" height="20" uuid="77b640b5-7c36-4cf5-a4d5-ea34d9345c6f"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numeroHorasExtrasDiurnas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="479" y="0" width="93" height="20" uuid="699d69c7-0b82-44f4-8c0e-b679687a278a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numeroHorasExtrasNocturas}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="379" height="20" uuid="df967af6-d03d-4517-98be-51f3af843802"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE HORAS:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="379" y="0" width="100" height="20" uuid="b871f661-89fc-4ae6-a42e-7137cfd56e3f"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{numeroHorasExtrasDiurnas_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="479" y="0" width="93" height="20" uuid="127b2543-2edd-4414-86ba-60da73e03308"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{numeroHorasExtrasNocturas_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

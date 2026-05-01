@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facDoanbo" language="groovy" pageWidth="369" pageHeight="600" columnWidth="329" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="49eef07f-7ecc-4748-924b-725081663898">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idVenta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    day(ventas.fechaFactura) as day,
+    month(ventas.fechaFactura) as month,
+    year(ventas.fechaFactura) as year,
+    ventas.nombre,
+    ventas.direccion,
+    ventas.nit,
+    ventas.total,
+    ventasDetalle.cantidad,
+    substring(concat(ventasDetalle.sku,' - ',ventasDetalle.descLarga),1,34) as descLarga,
+    ventasDetalle.total as totalProducto,
+    ventas.totalEnLetras
+FROM
+    ventas
+    inner join ventasDetalle on(ventas.id=ventasDetalle.idVentas)
+WHERE
+    ventas.id=$P{idVenta};]]>
+	</queryString>
+	<field name="day" class="java.lang.Long"/>
+	<field name="month" class="java.lang.Long"/>
+	<field name="year" class="java.lang.Long"/>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre]]></fieldDescription>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[Direccion]]></fieldDescription>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<fieldDescription><![CDATA[NIT]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="cantidad" class="java.lang.Double">
+		<fieldDescription><![CDATA[Cantidad]]></fieldDescription>
+	</field>
+	<field name="descLarga" class="java.lang.String"/>
+	<field name="totalProducto" class="java.lang.Double"/>
+	<field name="totalEnLetras" class="java.lang.String">
+		<fieldDescription><![CDATA[Total En Letras]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="238" splitType="Stretch">
+			<textField>
+				<reportElement x="56" y="151" width="274" height="25" uuid="9a1d4c42-570c-41df-9017-61dff2733139"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="56" y="176" width="274" height="25" uuid="17b79cf1-0905-4789-8113-63dfc3238583"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="229" y="201" width="100" height="25" uuid="0fe678ff-0ff3-4e71-aaa2-ef91b1b25d3c"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="185" y="130" width="44" height="20" uuid="6540ffbc-c658-47a3-9eb6-7fb3d0c4f654"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{day}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="130" width="35" height="20" uuid="cfd2400a-36f8-48a6-8a1d-5bb37cec658a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="130" width="44" height="20" uuid="12e3f22b-5ae4-4a30-ac27-3744d85d054f"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField pattern="###0">
+				<reportElement x="0" y="0" width="55" height="18" uuid="9afcc09c-4625-4ddf-a1ce-721c7d252e08"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="55" y="0" width="194" height="18" uuid="018ab523-a59c-4b38-b473-6ad36e6fb873"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{descLarga}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="249" y="0" width="54" height="18" uuid="26093c1b-ee53-4afd-ac0b-f4b13ad14bcb"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{totalProducto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="42" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="249" y="22" width="54" height="20" uuid="a2a2c49d-2dfd-4a7b-8c3a-88fe1b7db840"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facturaSuple" language="groovy" pageWidth="612" pageHeight="396" orientation="Landscape" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d681caab-ddd9-4695-b48b-8a591dc83e4b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idVenta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+p.descLarga,v.serie,v.correlativo,v.fechaFactura,v.valorFactura,v.total,
+v.nit,v.direccion,v.nombre as nombreCliente,vd.*,m.descripcion as medida,
+date_format(fechaFactura,"%d") as dia,
+date_format(fechaFactura,"%Y") as age,
+case date_format(fechaFactura,"%m")
+when '01' then 'ENERO'
+when '02' then 'FEBRERO'
+when '03' then 'MARZO'
+when '04' then 'ABRIL'
+when '05' then 'MAYO'
+when '06' then 'JUNIO'
+when '07' then 'JULIO'
+when '08' then 'AGOSTO'
+when '09' then 'SEPTIEMBRE'
+when '10' then 'OCTUBRE'
+when '11' then 'NOVIEMBRE'
+when '12' then 'DICIEMBRE'
+end as mes,
+case v.idTipoVenta
+when '1' then 'X'
+when '2' then ''
+end as contado,
+case v.idTipoVenta
+when '1' then ''
+when '2' then 'X'
+end as credito,
+c.limiteCredito as diasCredito,
+case p.descLarga
+  when 'DIESEL' then (vd.precio-1.30)
+  when 'SUPER' then (vd.precio-4.70)
+  when 'REGULAR' then (vd.precio-4.60)
+end as precioSinIDP,
+(case p.descLarga
+  when 'DIESEL' then (vd.precio-1.30)
+  when 'SUPER' then (vd.precio-4.70)
+  when 'REGULAR' then (vd.precio-4.60)
+end  * vd.cantidad) as totalSinIDP,
+case p.descLarga
+  when 'DIESEL' then 1.30
+  when 'SUPER' then 4.70
+  when 'REGULAR' then 4.60
+end as idp,
+(case p.descLarga
+  when 'DIESEL' then 1.30
+  when 'SUPER' then 4.70
+  when 'REGULAR' then 4.60
+end * vd.cantidad) as totalIDP
+from ventas as v
+left join ventasDetalle as vd on v.id=vd.idVentas
+inner join productos as p on vd.idProductos = p.id
+left join medidas as m on p.idMedidas=m.id
+left join clientes as c on c.id=v.idClientes
+where v.id=$P{idVenta}]]>
+	</queryString>
+	<field name="descLarga" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre,6]]></fieldDescription>
+	</field>
+	<field name="serie" class="java.lang.String">
+		<fieldDescription><![CDATA[Serie]]></fieldDescription>
+	</field>
+	<field name="correlativo" class="java.lang.String">
+		<fieldDescription><![CDATA[Correlativo]]></fieldDescription>
+	</field>
+	<field name="fechaFactura" class="java.sql.Date">
+		<fieldDescription><![CDATA[Fecha de Factura]]></fieldDescription>
+	</field>
+	<field name="valorFactura" class="java.lang.Double">
+		<fieldDescription><![CDATA[Valor de Factura]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<fieldDescription><![CDATA[NIT]]></fieldDescription>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[Direccion]]></fieldDescription>
+	</field>
+	<field name="nombreCliente" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[No.]]></fieldDescription>
+	</field>
+	<field name="idVentas" class="java.lang.Integer">
+		<fieldDescription><![CDATA[No. Venta]]></fieldDescription>
+	</field>
+	<field name="tipoProducto" class="java.lang.String">
+		<fieldDescription><![CDATA[Tipo de Producto]]></fieldDescription>
+	</field>
+	<field name="idProductos" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Producto]]></fieldDescription>
+	</field>
+	<field name="sku" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cantidad" class="java.lang.Double">
+		<fieldDescription><![CDATA[Cantidad]]></fieldDescription>
+	</field>
+	<field name="precio" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precioDolares" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="costo" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totalDolares" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totalCosto" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idUsuarios" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Cajero]]></fieldDescription>
+	</field>
+	<field name="idSucursales" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Sucursal]]></fieldDescription>
+	</field>
+	<field name="idEmpresas" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Empresa]]></fieldDescription>
+	</field>
+	<field name="medida" class="java.lang.String"/>
+	<field name="dia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="age" class="java.lang.String"/>
+	<field name="mes" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="contado" class="java.lang.String"/>
+	<field name="credito" class="java.lang.String"/>
+	<field name="diasCredito" class="java.lang.Double">
+		<fieldDescription><![CDATA[Dias Credito,3]]></fieldDescription>
+	</field>
+	<field name="precioSinIDP" class="java.lang.Double"/>
+	<field name="totalSinIDP" class="java.lang.Double"/>
+	<field name="idp" class="java.math.BigDecimal"/>
+	<field name="totalIDP" class="java.lang.Double"/>
+	<variable name="totalSinIDP" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[($F{cantidad}*$F{precioSinIDP})]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="121" splitType="Stretch">
+			<textField>
+				<reportElement x="326" y="35" width="196" height="20" uuid="24d2ad02-1747-4d0e-be66-f0a3e3f94f76"/>
+				<textFieldExpression><![CDATA[$F{dia}+" DE "+$F{mes}+" DE "+$F{age}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="54" width="329" height="20" uuid="05363699-6817-4bd5-aae8-296712e1352f"/>
+				<textFieldExpression><![CDATA[$F{nombreCliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="73" width="492" height="20" uuid="3c2aee31-1e5a-44fb-ba26-ade808ae5d6a"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="54" width="98" height="20" uuid="5213dc58-970c-4614-8954-b56c58f09832"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="86" width="21" height="20" uuid="715392ad-97a6-4e39-99fb-286163c5c7e7"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{credito}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="413" y="86" width="23" height="20" uuid="46c79914-6538-4419-84d2-669e26d61092"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{contado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="475" y="87" width="29" height="20" uuid="a7a7065b-4df0-47fe-ae4f-472f3ce96be1"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[15]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<elementGroup/>
+			<textField>
+				<reportElement x="0" y="1" width="246" height="15" uuid="127a73e3-a918-4ef6-9370-7f93d2b22fea"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descLarga}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="246" y="1" width="129" height="15" uuid="30e91b4b-44d6-4b24-bfaf-d9441c3fda40"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidad}+" "+$F{medida}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="375" y="1" width="67" height="15" uuid="f3d51391-4732-45f5-9fa8-33cf2235890a"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{precioSinIDP}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="16" width="246" height="15" uuid="d81d8f66-83aa-42c8-a4b1-34c8682b03f5"/>
+				<textElement markup="none">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DECRETO 3892" + " ("+$F{descLarga}+")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="246" y="16" width="129" height="15" uuid="37488693-66af-4e18-ac95-b802b3020bb8"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidad}+" "+$F{medida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="375" y="16" width="67" height="15" uuid="774f0389-7cdd-4ed7-9076-fab75749d026"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idp}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="442" y="1" width="80" height="15" uuid="d3fd4462-4cd4-456c-8572-bc46f1401dff"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalSinIDP}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="442" y="16" width="80" height="15" uuid="b233eaf3-9c40-4138-abea-a17906e94550"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalIDP}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="109">
+			<textField pattern="#,##0.00">
+				<reportElement x="422" y="82" width="100" height="20" uuid="cba4c289-b27e-408b-81bc-1437855c7f11"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

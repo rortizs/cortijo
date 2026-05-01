@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="conciliacionBancaria" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2450d8ff-6d9f-49fb-8e82-9d7a35e4b23d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechaInicio" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFin" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idCuentaBancaria" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idEmpresas" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaInicio2" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFin2" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    date_format(fechaDocumento,'%d-%m-%Y') as fechaDocumento,
+    tipoDocumento,
+    noDocumento,
+    status,
+    credito,
+    debito,
+    numeroCuenta,
+    banco,
+    nombreComercial,
+    direccion,
+    telefono,
+    nit,
+    (credito-debito) as saldo,
+    Monto,
+    (SELECT
+			sum((credito-debito))
+	FROM
+		documentosBancarios
+	WHERE
+		 fechaDocumento BETWEEN $P{fechaInicio} AND $P{fechaFin}
+		 AND idCuentasBancarias=$P{idCuentaBancaria}
+		 AND idEmpresas = $P{idEmpresas}
+	ORDER BY fechaDocumento ASC) as saldoLibros,
+     (SELECT
+			sum((credito-debito))
+	FROM
+		documentosBancarios
+	WHERE
+		 fechaDocumento BETWEEN $P{fechaInicio} AND $P{fechaFin}
+		 AND idCuentasBancarias=$P{idCuentaBancaria}
+		 AND idEmpresas = $P{idEmpresas}
+         AND status='CONCILIADO'
+	ORDER BY fechaDocumento ASC) as saldoBancos,
+    (SELECT
+			sum((credito-debito))
+	FROM
+		documentosBancarios
+	WHERE
+		 fechaDocumento BETWEEN $P{fechaInicio} AND $P{fechaFin}
+		 AND idCuentasBancarias=$P{idCuentaBancaria}
+		 AND idEmpresas = $P{idEmpresas}
+         AND status!='CONCILIADO'
+	ORDER BY fechaDocumento ASC) as saldoCirculacion
+FROM
+    documentosBancarios
+WHERE
+     fechaDocumento BETWEEN $P{fechaInicio} AND $P{fechaFin}
+     AND idCuentasBancarias=$P{idCuentaBancaria}
+     AND idEmpresas = $P{idEmpresas}
+     AND status!='CONCILIADO'
+ORDER BY fechaDocumento ASC]]>
+	</queryString>
+	<field name="fechaDocumento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipoDocumento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="noDocumento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="status" class="java.lang.String">
+		<fieldDescription><![CDATA[Status]]></fieldDescription>
+	</field>
+	<field name="credito" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="debito" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numeroCuenta" class="java.lang.String">
+		<fieldDescription><![CDATA[Numero de Cuenta]]></fieldDescription>
+	</field>
+	<field name="banco" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombreComercial" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre Comercial]]></fieldDescription>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[Direccion Facturacion]]></fieldDescription>
+	</field>
+	<field name="telefono" class="java.lang.String">
+		<fieldDescription><![CDATA[Teléfonos]]></fieldDescription>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<fieldDescription><![CDATA[NIT]]></fieldDescription>
+	</field>
+	<field name="saldo" class="java.lang.Double">
+		<fieldDescription><![CDATA[Saldo Por Pagar]]></fieldDescription>
+	</field>
+	<field name="Monto" class="java.lang.Double">
+		<fieldDescription><![CDATA[Monto en Dolares]]></fieldDescription>
+	</field>
+	<field name="saldoLibros" class="java.lang.Double">
+		<fieldDescription><![CDATA[Saldo en Libros]]></fieldDescription>
+	</field>
+	<field name="saldoBancos" class="java.lang.Double"/>
+	<field name="saldoCirculacion" class="java.lang.Double"/>
+	<variable name="saldo_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Monto}]]></variableExpression>
+	</variable>
+	<variable name="totales" class="java.lang.String">
+		<variableExpression><![CDATA[($F{saldoLibros})]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="278" splitType="Stretch">
+			<staticText>
+				<reportElement x="464" y="0" width="67" height="20" uuid="c994ce5b-ba85-4048-be43-c4b97555b7a8"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAG. NO.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="102" y="131" width="284" height="20" uuid="47dc0a5c-47e3-4e6d-a47d-73a612ec8ec7"/>
+				<textFieldExpression><![CDATA[$F{numeroCuenta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="531" y="0" width="41" height="20" uuid="57ef99ee-57b9-40bc-88ff-30d0886846e5"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="109" y="20" width="277" height="20" uuid="40bf584c-7dc6-48ab-8556-4ba9d39f6073"/>
+				<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="111" width="100" height="20" uuid="bc63f88a-5d40-43d4-92b1-85224c69a6fd"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BANCO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="80" width="384" height="20" uuid="a1b400d0-72ba-4746-86ec-5287a2321fe3"/>
+				<textElement>
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[CONCILIACION BANCARIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="40" width="107" height="20" uuid="b894e486-cfff-42d1-84d2-845a8b928d9f"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DIRECCION:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="0" width="107" height="20" uuid="cdd6a2c7-bcbe-41b7-a000-5c08d301e9d3"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMPRESA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="20" width="107" height="20" uuid="d6d98500-427f-48f4-b4fe-cfed1aa9e557"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NIT:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="109" y="40" width="277" height="20" uuid="02926594-dc0c-4902-92be-adab771e3129"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="131" width="100" height="20" uuid="7e9b2062-d614-4875-b432-c56423ed996c"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUENTA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="102" y="111" width="284" height="20" uuid="d8461691-d008-4ae3-b494-efdfad6b8129"/>
+				<textFieldExpression><![CDATA[$F{banco}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="151" width="100" height="20" uuid="09762110-2f42-4851-82b4-81c2027ef165"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHAS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="109" y="60" width="277" height="20" uuid="b7f92bd1-eef6-47a2-a801-b6fe2484bc83"/>
+				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="109" y="0" width="277" height="20" uuid="8ad680a8-4df9-44c2-b15c-e3b83064db25"/>
+				<textFieldExpression><![CDATA[$F{nombreComercial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="60" width="107" height="20" uuid="15348645-72ef-4b42-a565-bf06279a6b11"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TELEFONOS:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="102" y="151" width="284" height="20" uuid="a5f0dc6c-8536-4334-83f8-9e580f6b369e"/>
+				<textFieldExpression><![CDATA["DESDE "+ $P{fechaInicio2}+" HASTA "+$P{fechaFin2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="172" y="193" width="200" height="20" uuid="7f80a4b1-4a8d-4390-9f73-2f40cf82dd1d"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDO EN LIBROS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="193" width="200" height="20" uuid="578be6ad-59e5-4452-a95e-4caba34f7189"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDO EN BANCOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="213" width="170" height="20" uuid="49a48e87-804a-4438-81c4-5c6202c70342"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDOS FINALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="233" width="170" height="20" uuid="12803112-4770-4483-8a88-8924c83859c1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[(-) CHEQUES EN CIRCULACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="253" width="170" height="20" uuid="8c456ed3-00e1-4b64-bece-a2b038884f3c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUMAS IGUALES]]></text>
+			</staticText>
+			<line>
+				<reportElement x="172" y="253" width="400" height="1" uuid="54ef4f60-d241-4e76-94f3-0a72c39ba29a"/>
+			</line>
+			<line>
+				<reportElement x="172" y="272" width="400" height="1" uuid="7cb54846-ae35-48cc-81b0-3574a95d02f4"/>
+			</line>
+			<line>
+				<reportElement x="172" y="275" width="400" height="1" uuid="cab30995-9504-4f72-8760-fd3487460e10"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="172" y="213" width="199" height="20" uuid="d8517298-a1e1-4ec5-a3b0-e76ef58cb41a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{saldoLibros}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="371" y="213" width="201" height="20" uuid="c53e4cde-66af-452a-9dff-ac0f9c1a2b7a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{saldoBancos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="371" y="233" width="200" height="20" uuid="93273b43-17a9-4cde-95a9-8a59ae627337"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{saldoCirculacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="172" y="252" width="199" height="20" uuid="931e247c-4f2b-4d3f-86e8-169dcea34768"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{saldoLibros}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="372" y="253" width="199" height="20" uuid="6ea720ac-eb3b-4478-973a-a82089465f04"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{saldoLibros}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="54" splitType="Stretch">
+			<line>
+				<reportElement x="2" y="52" width="570" height="1" uuid="072ab380-0321-407b-98bc-29e69c63bff4"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="13" width="384" height="20" uuid="34d949da-877b-4a68-b0ee-d8c99a0e9932"/>
+				<textElement>
+					<font size="15"/>
+				</textElement>
+				<text><![CDATA[DOCUMENTOS EN CIRCULACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="33" width="150" height="20" uuid="c07f1e00-5d6f-4041-81ed-a33853055785"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="33" width="150" height="20" uuid="86b705aa-6f2f-462e-8b2a-cc12e81711e4"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO DOCUMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="33" width="150" height="20" uuid="b5253447-d79d-44d9-ad9d-ff1b80f9bb6f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NO. DOCUMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="33" width="122" height="20" uuid="790b2796-db99-4911-aa6b-8c469af1da4a"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MONTO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="33" width="570" height="1" uuid="f143a05c-822e-4fea-8e79-36f337029cde"/>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="150" height="20" uuid="39640c62-81b9-45f5-b0e6-824a9083b86d"/>
+				<textFieldExpression><![CDATA[$F{fechaDocumento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="0" width="150" height="20" uuid="71fb536c-9b3a-4267-8472-4d10184f0b39"/>
+				<textFieldExpression><![CDATA[$F{tipoDocumento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="150" height="20" uuid="13713f0c-8fe9-419a-98c6-8db7f0788aa6"/>
+				<textFieldExpression><![CDATA[$F{noDocumento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="450" y="0" width="121" height="20" uuid="fb6f9245-4bbe-4ceb-b5cc-bd620bd5eadf"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{Monto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="123" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="450" height="20" uuid="cfea8a0f-0eba-4c7f-8cec-30436c521063"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTALES]]></text>
+			</staticText>
+			<line>
+				<reportElement x="450" y="0" width="121" height="1" uuid="4c8feae4-c540-4960-96f9-7f2705332aa7"/>
+			</line>
+			<line>
+				<reportElement x="451" y="20" width="121" height="1" uuid="3e25ada2-8921-4765-a0e7-a3a894d755ad"/>
+			</line>
+			<line>
+				<reportElement x="451" y="23" width="121" height="1" uuid="5b20a7a0-ba9a-4c23-bc6b-087d65241353"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="450" y="0" width="122" height="20" uuid="e37cbd7c-e43d-498e-a822-bf306a756ad0"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{saldoCirculacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

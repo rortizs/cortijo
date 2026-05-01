@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pagareLaxTravel" language="groovy" pageWidth="612" pageHeight="396" orientation="Landscape" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ced07936-e268-4800-b36c-a74185cc6765">
+	<property name="ireport.zoom" value="1.0000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idVenta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    e.nombreComercial,
+    e.direccion,
+    e.telefono,
+    DATE_FORMAT(v.fechaFactura, '%d/%m/%Y') AS fechaFactura,
+    c.codigo AS codigoCliente,
+    c.nombreC,
+    c.direccionC,
+    av.boleto,
+    av.pasajero,
+    SUBSTR(`av`.`codigoLineaArea`,
+        1,
+        (LENGTH(`av`.`codigoLineaArea`) - 1)) AS codigoLineaArea,
+    DATE_FORMAT(v.fechaFactura, '%d/%m/%Y') AS fecha,
+    cast(av.montoSinImpuestos as decimal(10,2)) AS compTarifa,
+    cast((av.totalImpuestos - (av.montoSinImpuestos * 0.12)) as decimal(10,2)) AS otros,
+    '0.00' AS montoImpuesto,
+    cast(av.montoTotal as decimal(10,2)) as montoTotal,
+    cast((av.montoSinImpuestos * 0.12) as decimal(10,2)) AS iva,
+    av.formaPago,
+    v.totalEnLetras,
+    cast(v.total as decimal(10,2)) as total,
+    cast(v.descuento as decimal(10,2)) as descuento,
+    cast(av.tasaCambio as decimal(10,2)) as tasaCambio,
+    cast((vd.fee * av.tasaCambio) as decimal(10,2)) AS fee,
+    cast(vd.total as decimal(10,2)) AS subtotalBoleto,
+    v.direccion AS direccionF,
+    cast(CASE av.formaPago
+        WHEN 'CASH' THEN (vd.total - (vd.fee * av.tasaCambio))
+        ELSE '0.00'
+    END as decimal(10,2)) AS efectivo,
+    cast(CASE av.formaPago
+        WHEN 'CASH' THEN '0.00'
+        ELSE (vd.total - (vd.fee * av.tasaCambio))
+    END as decimal(10,2)) AS tarjeta,
+    av.codVendedor,
+    v.serie,
+    v.correlativo,
+    v.seriePagare,
+    v.correlativoPagare,
+    cast(v.cargosXServicio as decimal(10,2)) as cargosXServicio,
+    cast((vd.total - vd.fee) as decimal(10,2)) AS totalPago
+FROM
+    agenciasViajes AS av
+        INNER JOIN
+    ventasDetalle AS vd ON vd.idProducto = av.id
+        INNER JOIN
+    ventas AS v ON v.id = vd.idVentas
+        INNER JOIN
+    empresas AS e ON e.codAgencia = av.codAgencia
+        LEFT JOIN
+    clientes AS c ON c.id = v.idClientes
+WHERE
+    v.id =$P{idVenta}]]>
+	</queryString>
+	<field name="nombreComercial" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre Comercial]]></fieldDescription>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[Dirección]]></fieldDescription>
+	</field>
+	<field name="telefono" class="java.lang.String">
+		<fieldDescription><![CDATA[Teléfonos]]></fieldDescription>
+	</field>
+	<field name="fechaFactura" class="java.lang.String">
+		<fieldDescription><![CDATA[Fecha de Factura]]></fieldDescription>
+	</field>
+	<field name="codigoCliente" class="java.lang.String"/>
+	<field name="nombreC" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre del Cliente,6]]></fieldDescription>
+	</field>
+	<field name="direccionC" class="java.lang.String">
+		<fieldDescription><![CDATA[Dirección]]></fieldDescription>
+	</field>
+	<field name="boleto" class="java.lang.String">
+		<fieldDescription><![CDATA[Tickets]]></fieldDescription>
+	</field>
+	<field name="pasajero" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre Pasajeros]]></fieldDescription>
+	</field>
+	<field name="codigoLineaArea" class="java.lang.String">
+		<fieldDescription><![CDATA[Codigo Linea Aerea]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.lang.String">
+		<fieldDescription><![CDATA[Fecha]]></fieldDescription>
+	</field>
+	<field name="compTarifa" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Itinerario]]></fieldDescription>
+	</field>
+	<field name="otros" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[otros gastos]]></fieldDescription>
+	</field>
+	<field name="montoImpuesto" class="java.lang.String"/>
+	<field name="montoTotal" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Monto Total]]></fieldDescription>
+	</field>
+	<field name="iva" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Iva Factura]]></fieldDescription>
+	</field>
+	<field name="formaPago" class="java.lang.String">
+		<fieldDescription><![CDATA[Forma de Pago]]></fieldDescription>
+	</field>
+	<field name="totalEnLetras" class="java.lang.String">
+		<fieldDescription><![CDATA[Total En Letras]]></fieldDescription>
+	</field>
+	<field name="total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="descuento" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Descuento]]></fieldDescription>
+	</field>
+	<field name="tasaCambio" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Tasa de Cambio]]></fieldDescription>
+	</field>
+	<field name="fee" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="subtotalBoleto" class="java.math.BigDecimal"/>
+	<field name="direccionF" class="java.lang.String"/>
+	<field name="efectivo" class="java.math.BigDecimal"/>
+	<field name="tarjeta" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="codVendedor" class="java.lang.String">
+		<fieldDescription><![CDATA[Codigo Vendedor]]></fieldDescription>
+	</field>
+	<field name="serie" class="java.lang.String">
+		<fieldDescription><![CDATA[Serie]]></fieldDescription>
+	</field>
+	<field name="correlativo" class="java.lang.String">
+		<fieldDescription><![CDATA[Correlativo]]></fieldDescription>
+	</field>
+	<field name="seriePagare" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="correlativoPagare" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cargosXServicio" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totalPago" class="java.math.BigDecimal"/>
+	<variable name="montoTotal_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{montoTotal}]]></variableExpression>
+	</variable>
+	<variable name="subtotalBoleto_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{subtotalBoleto}]]></variableExpression>
+	</variable>
+	<variable name="descuento_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{descuento}]]></variableExpression>
+	</variable>
+	<variable name="cargosXServicio_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{cargosXServicio}]]></variableExpression>
+	</variable>
+	<variable name="fee_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{fee}]]></variableExpression>
+	</variable>
+	<variable name="efectivo_1" class="java.lang.Integer" resetType="Page" calculation="Count">
+		<variableExpression><![CDATA[$F{efectivo}]]></variableExpression>
+	</variable>
+	<variable name="efectivo_2" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{efectivo}]]></variableExpression>
+	</variable>
+	<variable name="totalPago_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalPago}]]></variableExpression>
+	</variable>
+	<variable name="efectivo_3" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{efectivo}]]></variableExpression>
+	</variable>
+	<variable name="tarjeta_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{tarjeta}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="160">
+			<textField>
+				<reportElement x="31" y="13" width="400" height="14" uuid="3b2a19cc-30e9-481b-85f9-77cd2dffb0aa"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombreComercial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="31" y="33" width="310" height="14" uuid="46c4d4e1-48ec-4950-b696-757b98ee8831"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="31" y="47" width="131" height="14" uuid="88e84c78-4753-4b98-96cf-a3abc283a08e"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PBX:"+$F{telefono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="483" y="33" width="129" height="14" uuid="e46b71a9-420e-4b6f-a90a-6a3b6329fdae"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["   Fecha:      "+$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="419" y="46" width="193" height="14" uuid="773ce336-b681-4c2d-b529-451db96f2bdd"/>
+				<textElement markup="none">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["            Voucher/Pagare No.     "+$F{seriePagare}+'-'+$F{correlativoPagare}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="72" y="97" width="392" height="14" uuid="759b5d9a-e4be-4401-a77b-6d5825728552"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigoCliente}+"                     "+$F{nombreC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="72" y="111" width="269" height="14" uuid="ecd36739-9255-4b17-aee5-2b7e8a98a6d6"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccionF}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="341" y="111" width="244" height="14" uuid="865ff3d6-db7b-4f32-9b2a-c5c22926b3cf"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  Vendedor: "+$F{codVendedor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="13" y="97" width="59" height="14" uuid="56d0d514-eed9-407d-96fd-949051b1cf47"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Cliente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="13" y="111" width="59" height="14" uuid="559b4acf-1ba3-4afd-b850-691ec7700d18"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Direccion:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="93" width="612" height="1" uuid="025baec7-5f2b-4296-8f46-9ee1bf42f7cc"/>
+			</line>
+			<line>
+				<reportElement x="0" y="96" width="612" height="1" uuid="99d967ca-371d-4129-bd80-87fc8ca25b8e"/>
+			</line>
+			<staticText>
+				<reportElement x="71" y="136" width="112" height="20" uuid="4f31c287-055a-465a-be42-725a769e0d32"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Nombre Pasajero]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="157" y="136" width="57" height="20" uuid="651a5d6b-b8a1-4548-8ac0-c09b2d9a0740"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Cod. Prov]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="214" y="136" width="69" height="20" uuid="55d9fa4f-1a84-4425-b70a-3263c7361484"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="326" y="136" width="37" height="20" uuid="50184758-1ee0-49ea-a32f-e7ac44211258"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="363" y="136" width="74" height="20" uuid="50afe979-d447-42fc-bb4e-733c5960c906"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Imp. Turismo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="431" y="136" width="33" height="20" uuid="e1493dc9-eef4-4bcd-94c4-17aeccb1f014"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Otros]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="455" y="136" width="96" height="20" uuid="ea3d60c6-0652-4f9a-a21a-5c375ff97763"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Cargos x Serv.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="551" y="136" width="46" height="20" uuid="fa361c17-3b3f-40f0-894b-509d8baefcf9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="283" y="136" width="45" height="20" uuid="3cba68f9-c5d0-43c4-8706-32d16afadd86"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Tarifa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="136" width="62" height="20" uuid="5c1c829b-c297-4787-93d7-592effe7afd2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[No. Boleto]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="132" width="612" height="1" uuid="26c2c1f4-442f-4a3a-b193-ef437c2d2a20"/>
+			</line>
+			<line>
+				<reportElement x="0" y="130" width="612" height="1" uuid="37ddc0a3-ebd1-4336-a039-628c282b10ab"/>
+			</line>
+			<line>
+				<reportElement x="0" y="155" width="612" height="1" uuid="65e40acf-c8b4-45df-9479-74d046b63c3e"/>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="15">
+			<textField>
+				<reportElement x="9" y="0" width="62" height="15" uuid="cd04f81d-4fe7-4a79-9d5a-d6199f879909"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{boleto}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="71" y="0" width="87" height="15" uuid="4fd5b803-3118-408d-9cae-ef5ba58eb48e"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pasajero}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="158" y="0" width="56" height="15" uuid="fc83cdbe-b20e-4316-a6e0-2a012e679539"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigoLineaArea}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="214" y="0" width="69" height="15" uuid="a44aa087-a2ad-4cec-bacb-ba742abf1ad7"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="551" y="0" width="44" height="15" uuid="38334614-8f86-4ddc-b1fd-17623de89c3b"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{subtotalBoleto}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="470" y="0" width="81" height="15" uuid="77acda58-77e3-4d45-9b8d-ef403c34060e"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fee}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="431" y="0" width="39" height="15" uuid="0f759f46-0915-4adb-a4f2-ecb6f7af4cc8"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{otros}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="375" y="0" width="56" height="15" uuid="44363378-8d78-4a42-91d7-2a41c7cb6082"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{montoImpuesto}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="268" y="0" width="58" height="15" uuid="2d672f08-dd98-4cc5-9912-48e776d4f278"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{compTarifa}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="328" y="0" width="47" height="15" uuid="fdaee04e-6662-4126-be8e-c30ea33fd504"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{iva}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="62">
+			<textField>
+				<reportElement x="9" y="1" width="528" height="14" uuid="48f83e45-5751-4bf2-8881-86ff17b56b68"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["En Letras: "+$F{totalEnLetras}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="11" y="17" width="215" height="14" uuid="62e56651-2f6b-476d-804f-11ffb213bd79"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Roe: "+$F{tasaCambio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="222" y="17" width="215" height="14" uuid="a71d5b29-2b2d-4d0e-b3ee-7a737904e5b4"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["No. Factura: "+$F{serie}+'-'+$F{correlativo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="56">
+			<staticText>
+				<reportElement x="453" y="13" width="98" height="14" uuid="48ca9318-ebc0-4e3b-9274-4d54c2150719"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[(-)Descuento Q.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="14" width="105" height="14" uuid="1eedc6c6-f13b-435d-be06-de7c674024f1"/>
+				<textElement verticalAlignment="Bottom" markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cargo x Servicio: "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="453" y="26" width="98" height="14" uuid="7bb33c39-5d82-450d-9fb9-9310d4230f44"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Total A Pagar Q.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="537" y="40" width="62" height="16" uuid="ea057d29-2382-4451-b180-62636a48462c"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[=======]]></text>
+			</staticText>
+			<line>
+				<reportElement x="553" y="26" width="44" height="1" uuid="5c22adfa-d0ea-4c3e-ab71-c4ef770fc57b"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="551" y="26" width="48" height="14" uuid="2f59f365-787e-456e-8803-69db52b21f97"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{subtotalBoleto_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="551" y="13" width="48" height="13" uuid="7b481b27-0d7e-4e70-b73c-ca3c38451aef"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{descuento_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="453" y="0" width="98" height="14" uuid="d1161e68-1d80-4231-80ce-a1121ddb855e"/>
+				<textElement verticalAlignment="Bottom" markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Total Venta    Q.]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="551" y="1" width="48" height="14" uuid="9be2a75e-c878-4c61-a0cd-4e5cf5945bdb"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{subtotalBoleto_1}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="612" height="1" uuid="1878db1d-c35e-4cc2-94da-86b6ad7aa913"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="105" y="14" width="78" height="14" uuid="5e1fc0dc-9ba1-4f0a-b1ff-8c5c5848109f"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{fee_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="14" uuid="341bf310-8d1f-416d-849c-3db7e32af29e"/>
+				<text><![CDATA[Pagado en Efectivo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="183" y="1" width="128" height="14" uuid="c8dd2de8-5f97-4679-95d3-2dcc807ec8c2"/>
+				<text><![CDATA[Pagado con Tarjeta BSP:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="398" y="1" width="55" height="14" uuid="96556f1d-cbf7-49a4-8190-40dcd1c621eb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{tarjeta_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="100" y="1" width="83" height="14" uuid="59822e8b-4bf9-4e5d-80f0-0ebdafc284a3"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{efectivo_3}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="354" y="1" width="44" height="14" uuid="c3623c06-dfb8-4468-b926-b249f09be077"/>
+				<text><![CDATA[Tarjeta:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="311" y="1" width="43" height="14" uuid="a9f22655-54ee-4315-a2ee-b7142c77fa46"/>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

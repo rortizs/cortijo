@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Cheques" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ef5192bf-dfe4-498c-b09a-5f845fc7d765">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idCheque" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    *,
+    if(noNegociables = 'si','No Negociable','') as noNegociable,
+    upper(n.descripcion) as cuentaContable,
+    upper(e.nombreComercial) as empresa,
+    upper(f.userName) as usuario,
+    substr(fechaCheque,1,2) as day,
+    case substr(fechaCheque,4,2)
+	when '01' then 'Enero'
+      	when '02' then 'Febrero'
+      	when '03' then 'Marzo'
+      	when '04' then 'Abril'
+      	when '05' then 'Mayo'
+      	when '06' then 'Junio'
+      	when '07' then 'Julio'
+      	when '08' then 'Agosto'
+      	when '09' then 'Septiembre'
+      	when '10' then 'Octubre'
+      	when '11' then 'Noviembre'
+      	when '12' then 'Diciembre'
+	end as month,
+    substr(fechaCheque,7,4) as year
+FROM
+    vw_cheques as v
+        left join
+    partidas as p ON (v.idPartidas = p.numero)
+        left join
+    partidasDetalle as pd ON (p.id = pd.idPartidas)
+        left join
+    nomenclatura as n ON (pd.idNomenclatura = n.id)
+        left join
+    empresas as e on(v.idEmpresas=e.nombreComercial)
+        left join
+    usuarios as f on(v.idUsuarios=f.userName)
+where
+    v.id = $P{idCheque}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[No.]]></fieldDescription>
+	</field>
+	<field name="idCuentasBancarias" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idDocumentosCorrelativos" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre,6]]></fieldDescription>
+	</field>
+	<field name="correlativo" class="java.lang.String">
+		<fieldDescription><![CDATA[Correlativo]]></fieldDescription>
+	</field>
+	<field name="noCheque" class="java.lang.String">
+		<fieldDescription><![CDATA[No. Cheque]]></fieldDescription>
+	</field>
+	<field name="fechaCheque" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombreCheque" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre de Cheque]]></fieldDescription>
+	</field>
+	<field name="monto" class="java.lang.Double">
+		<fieldDescription><![CDATA[Monto]]></fieldDescription>
+	</field>
+	<field name="montoEnLetras" class="java.lang.String">
+		<fieldDescription><![CDATA[Monto en Letras]]></fieldDescription>
+	</field>
+	<field name="motivo" class="java.lang.String">
+		<fieldDescription><![CDATA[Motivo]]></fieldDescription>
+	</field>
+	<field name="idUsuarios" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre de Empleado]]></fieldDescription>
+	</field>
+	<field name="idEmpresas" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre Comercial]]></fieldDescription>
+	</field>
+	<field name="created_at" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="noNegociables" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechaCobro" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="idFormatos" class="java.lang.String">
+		<fieldDescription><![CDATA[Descripción]]></fieldDescription>
+	</field>
+	<field name="idPartidas" class="java.lang.String">
+		<fieldDescription><![CDATA[Número]]></fieldDescription>
+	</field>
+	<field name="status" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numero" class="java.lang.String">
+		<fieldDescription><![CDATA[Número]]></fieldDescription>
+	</field>
+	<field name="partida_at" class="java.sql.Date">
+		<fieldDescription><![CDATA[Fecha]]></fieldDescription>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<fieldDescription><![CDATA[Descripcion]]></fieldDescription>
+	</field>
+	<field name="idTipoOperacionPartida" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Tipo Operación]]></fieldDescription>
+	</field>
+	<field name="idNomenclatura" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Cuenta Contable]]></fieldDescription>
+	</field>
+	<field name="debe" class="java.lang.Double">
+		<fieldDescription><![CDATA[Debe]]></fieldDescription>
+	</field>
+	<field name="haber" class="java.lang.Double">
+		<fieldDescription><![CDATA[Haber]]></fieldDescription>
+	</field>
+	<field name="idCentrosCosto" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Centro de Costo]]></fieldDescription>
+	</field>
+	<field name="cuenta" class="java.lang.String">
+		<fieldDescription><![CDATA[Cuenta]]></fieldDescription>
+	</field>
+	<field name="nivel" class="java.lang.String">
+		<fieldDescription><![CDATA[Nivel]]></fieldDescription>
+	</field>
+	<field name="padre" class="java.lang.String">
+		<fieldDescription><![CDATA[Padre]]></fieldDescription>
+	</field>
+	<field name="idTipoCuentaContable" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Tipo de Cuenta]]></fieldDescription>
+	</field>
+	<field name="idTipoOperacionContable" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Tipo de Operación]]></fieldDescription>
+	</field>
+	<field name="nombreComercial" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre Comercial]]></fieldDescription>
+	</field>
+	<field name="razonSocial" class="java.lang.String">
+		<fieldDescription><![CDATA[Razón Social]]></fieldDescription>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<fieldDescription><![CDATA[Número Identificación Tributario]]></fieldDescription>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[Dirección]]></fieldDescription>
+	</field>
+	<field name="mailEmpresa" class="java.lang.String">
+		<fieldDescription><![CDATA[Correo Electrónico]]></fieldDescription>
+	</field>
+	<field name="telefono" class="java.lang.String">
+		<fieldDescription><![CDATA[Teléfonos]]></fieldDescription>
+	</field>
+	<field name="igssPatronal" class="java.lang.String">
+		<fieldDescription><![CDATA[No. Seguro Social Patronal]]></fieldDescription>
+	</field>
+	<field name="website" class="java.lang.String">
+		<fieldDescription><![CDATA[Página Web]]></fieldDescription>
+	</field>
+	<field name="idPaises" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Pais]]></fieldDescription>
+	</field>
+	<field name="userName" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre de Empleado]]></fieldDescription>
+	</field>
+	<field name="codigoUsuario" class="java.lang.String">
+		<fieldDescription><![CDATA[Codigo Usuario]]></fieldDescription>
+	</field>
+	<field name="user" class="java.lang.String">
+		<fieldDescription><![CDATA[Usuario]]></fieldDescription>
+	</field>
+	<field name="pwd" class="java.lang.String">
+		<fieldDescription><![CDATA[Contraseña]]></fieldDescription>
+	</field>
+	<field name="pwd_real" class="java.lang.String">
+		<fieldDescription><![CDATA[Contraseña]]></fieldDescription>
+	</field>
+	<field name="idRoles" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Rol Asignado]]></fieldDescription>
+	</field>
+	<field name="idSucursales" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Sucursal Asignada]]></fieldDescription>
+	</field>
+	<field name="idStatusEmpleado" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Estatus]]></fieldDescription>
+	</field>
+	<field name="noNegociable" class="java.lang.String"/>
+	<field name="cuentaContable" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="empresa" class="java.lang.String"/>
+	<field name="usuario" class="java.lang.String"/>
+	<field name="day" class="java.lang.String"/>
+	<field name="month" class="java.lang.String"/>
+	<field name="year" class="java.lang.String"/>
+	<variable name="debe_1" class="java.lang.Double" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[$F{debe}]]></variableExpression>
+	</variable>
+	<variable name="haber_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{haber}]]></variableExpression>
+	</variable>
+	<variable name="debe_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{debe}]]></variableExpression>
+	</variable>
+	<variable name="haber_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{haber}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="176" splitType="Stretch">
+			<textField>
+				<reportElement x="180" y="100" width="112" height="20" uuid="3950d870-a5a7-4d98-a514-49b4cee794c2"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{noNegociable}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="55" y="44" width="292" height="20" uuid="334f1117-cf93-4496-97bd-6a6d96872fce"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["** GUATEMALA, "+$F{day}+" de " +$F{month}+" de "+$F{year} +" **"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="75" y="60" width="218" height="20" uuid="a080e890-30db-41e4-b3c7-4a57db7e6a41"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["** "+$F{nombreCheque}+" **"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="37" y="78" width="448" height="20" uuid="7b2d5e37-26be-4464-9b2a-b8f94fa424d1"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["** "+$F{montoEnLetras}+" **"]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="347" y="44" width="138" height="20" uuid="f9b7434a-9a89-4e3f-b322-4f0de56680d4"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="218" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement x="10" y="12" width="552" height="101" uuid="431cda77-8fc8-42fb-ad75-49a47acb5982"/>
+			</rectangle>
+			<textField>
+				<reportElement x="25" y="13" width="525" height="20" uuid="5a9ca9a6-cf9d-4b86-a846-b7944df9bcb7"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empresa}+"   CTA  **Q** "+$F{idCuentasBancarias}+"    DOCTO No."+$F{noCheque}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="25" y="53" width="525" height="20" uuid="2d57ed4e-488d-48d0-97c2-6c1dfc1d9b88"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PAGUESE A          "+$F{nombreCheque}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="25" y="73" width="525" height="20" uuid="788989f3-331d-4148-92e6-370543c46cfd"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CANTIDAD            "+$F{montoEnLetras}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="163" y="93" width="112" height="20" uuid="3658681b-670b-43f1-8850-3dff7db853b2"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{noNegociable}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="25" y="124" width="100" height="20" uuid="153b380f-8a07-4ec9-b382-6b7be94f0960"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[OBSERVACIONES:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="25" y="144" width="285" height="20" uuid="0c56b363-06a6-4256-a15f-80398723fb74"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{motivo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="124" width="252" height="20" uuid="c7d66539-994c-4902-8127-3e8ac089d15b"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CHEQUE No. "+$F{noCheque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="198" width="115" height="20" uuid="f8489c81-45ed-49af-a92d-a46f288f3095"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUENTA NO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="125" y="198" width="185" height="20" uuid="b9a75967-c313-4283-b5d6-b4f71f477513"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="198" width="126" height="20" uuid="e68e8b35-599e-4a37-a657-d07c6c358a4f"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEBE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="436" y="198" width="126" height="20" uuid="0e9f1544-fb49-4176-b0eb-90bf506b59f9"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HABER]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="25" y="33" width="250" height="20" uuid="0d080659-ec77-4c8b-af1e-a8249d18c129"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["FECHA:                 GUATEMALA, "+$F{day}+" de " +$F{month}+" de "+$F{year}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="178" width="551" height="20" uuid="a0a0db55-49af-44e6-96c3-1006a4a4623d"/>
+				<textElement markup="none">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PARTIDA NO. "+$F{numero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="275" y="33" width="113" height="20" uuid="b9f75122-a9de-4a5a-86d4-a672ef31f862"/>
+				<textElement textAlignment="Right" markup="none">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MONTO:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="388" y="33" width="162" height="20" uuid="7829a9a2-e224-48b0-b95f-30b7a597792f"/>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="310" y="0" width="126" height="20" uuid="497cd993-8bba-4731-b12d-51f634ae8c5e"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{debe}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="436" y="0" width="126" height="20" uuid="e8adf663-c265-469f-9307-e81b8da50f4e"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{haber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="0" width="115" height="20" uuid="6100154d-758f-488e-ac32-f3deb832196c"/>
+				<box leftPadding="5">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cuenta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="0" width="185" height="20" uuid="ebaceb30-4cbf-480c-a9de-7144cf3712b0"/>
+				<box leftPadding="5">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cuentaContable}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="84" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="0" width="75" height="20" uuid="5d28af07-e437-4001-9701-c3d110642fec"/>
+				<textElement markup="none">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[HECHO POR:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="20" width="103" height="20" uuid="26a4c17f-62b7-46d8-b2ca-6e0473e76ddd"/>
+				<textElement markup="none">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[RECIBI CONFORME: ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="85" y="13" width="180" height="1" uuid="51789b11-8c66-4f6c-9708-7c629eb88ee6"/>
+			</line>
+			<line>
+				<reportElement x="113" y="32" width="152" height="1" uuid="690d1ca1-7787-4adb-9948-762ffcde830e"/>
+			</line>
+			<staticText>
+				<reportElement x="292" y="0" width="103" height="20" uuid="a6619cd4-e44a-4aa5-9627-b312a3526881"/>
+				<textElement markup="none">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[CONFIRMADO CON: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="292" y="20" width="44" height="20" uuid="1f356c03-18c8-4289-99d8-6d45e7038136"/>
+				<textElement markup="none">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="395" y="12" width="166" height="1" uuid="6184934a-bee1-4b57-942d-100cafb53b73"/>
+			</line>
+			<line>
+				<reportElement x="336" y="32" width="225" height="1" uuid="f22b870a-d167-4fc0-9e5a-f0faa3e55a3a"/>
+			</line>
+			<textField>
+				<reportElement x="85" y="0" width="180" height="20" uuid="0c9d8159-d0cc-4dcf-8040-a371affb9efe"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{usuario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="29" splitType="Stretch">
+			<line>
+				<reportElement x="310" y="24" width="251" height="1" uuid="7c7f22cd-9a04-4513-8739-cd9fa23c1f18"/>
+			</line>
+			<line>
+				<reportElement x="310" y="26" width="251" height="1" uuid="f89aae91-dc49-48b5-a2d6-7c24463ab19d"/>
+			</line>
+			<line>
+				<reportElement x="310" y="3" width="251" height="1" uuid="9e109930-02f5-4ce8-b1e8-f8c7bfa34862"/>
+			</line>
+			<staticText>
+				<reportElement x="10" y="4" width="300" height="20" uuid="ffd3af5d-17a1-408b-9e96-1a12c1070423"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTALES]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="310" y="4" width="126" height="20" uuid="5cb46efd-7e9c-4362-88fc-79d785ec8ce0"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{debe_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="436" y="4" width="126" height="20" uuid="88158a70-d89c-4ee7-ac9a-f0d43917bbc5"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{haber_2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

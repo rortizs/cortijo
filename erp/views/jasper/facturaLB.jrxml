@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facturaLB" language="groovy" pageWidth="382" pageHeight="569" columnWidth="318" leftMargin="36" rightMargin="28" topMargin="20" bottomMargin="20" uuid="55bb5a71-fdae-4e2b-9142-ab7ed995ff74">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idVenta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    a.*,
+    date_format(a.fechaFactura,'%d-%m-%Y') as fechaFac,
+    b.cantidad,
+    b.precio,
+    b.total as totalXProducto,
+    c.sku,
+    upper(c.descLarga) as descLarga,
+    upper(d.descripcion) as tipoVenta,
+    i.diasCredito,
+    if(anulacion=1,'ANULADA','ACTIVA') as estadoFactura
+FROM
+    ventas as a inner join ventasDetalle as b on(a.id=b.idVentas)
+    inner join productos as c on(b.idProductos=c.id)
+    inner join tipoVenta as d on(a.idTipoVenta=d.id)
+    left join clientes as i on(a.nit=i.nitC)
+WHERE
+    a.id = $P{idVenta}
+GROUP BY
+   b.idProductos]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[No.]]></fieldDescription>
+	</field>
+	<field name="serie" class="java.lang.String">
+		<fieldDescription><![CDATA[Serie]]></fieldDescription>
+	</field>
+	<field name="correlativo" class="java.lang.String">
+		<fieldDescription><![CDATA[Correlativo]]></fieldDescription>
+	</field>
+	<field name="fechaFactura" class="java.sql.Date">
+		<fieldDescription><![CDATA[Fecha de Factura]]></fieldDescription>
+	</field>
+	<field name="valorFactura" class="java.lang.Double">
+		<fieldDescription><![CDATA[Valor de Factura]]></fieldDescription>
+	</field>
+	<field name="subtotal" class="java.lang.Double">
+		<fieldDescription><![CDATA[Sub Total]]></fieldDescription>
+	</field>
+	<field name="descuento" class="java.lang.Double">
+		<fieldDescription><![CDATA[Descuento]]></fieldDescription>
+	</field>
+	<field name="descuentoP" class="java.lang.String">
+		<fieldDescription><![CDATA[Descuento %]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="iva" class="java.lang.Double">
+		<fieldDescription><![CDATA[IVA]]></fieldDescription>
+	</field>
+	<field name="tipoCambio" class="java.lang.Double">
+		<fieldDescription><![CDATA[Tipo de Cambio]]></fieldDescription>
+	</field>
+	<field name="totalDolares" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total Dolares]]></fieldDescription>
+	</field>
+	<field name="totalEnLetras" class="java.lang.String">
+		<fieldDescription><![CDATA[Total En Letras]]></fieldDescription>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<fieldDescription><![CDATA[NIT]]></fieldDescription>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre]]></fieldDescription>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[Direccion]]></fieldDescription>
+	</field>
+	<field name="idTipoOperacion" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Tipo de Operacion]]></fieldDescription>
+	</field>
+	<field name="idTipoVenta" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Tipo de Venta]]></fieldDescription>
+	</field>
+	<field name="conceptoVenta" class="java.lang.String">
+		<fieldDescription><![CDATA[Concepto de Venta]]></fieldDescription>
+	</field>
+	<field name="idUsuarios" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Realizado Por]]></fieldDescription>
+	</field>
+	<field name="idSucursales" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Establecimiento]]></fieldDescription>
+	</field>
+	<field name="idEmpresas" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Empresa]]></fieldDescription>
+	</field>
+	<field name="created_at" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[Fecha de Creacion]]></fieldDescription>
+	</field>
+	<field name="updated_at" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[Fecha de Actualizacion]]></fieldDescription>
+	</field>
+	<field name="idFormatos" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Partida Automatica]]></fieldDescription>
+	</field>
+	<field name="idPartidas" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Partida Contable]]></fieldDescription>
+	</field>
+	<field name="statusCierre" class="java.lang.String">
+		<fieldDescription><![CDATA[Cierre de Caja]]></fieldDescription>
+	</field>
+	<field name="anulacion" class="java.lang.String">
+		<fieldDescription><![CDATA[Anulada]]></fieldDescription>
+	</field>
+	<field name="idAdminUser" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="motivoAnulacion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="anulacion_at" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fechaFac" class="java.lang.String"/>
+	<field name="cantidad" class="java.lang.Double">
+		<fieldDescription><![CDATA[Cantidad]]></fieldDescription>
+	</field>
+	<field name="precio" class="java.lang.Double">
+		<fieldDescription><![CDATA[Precio]]></fieldDescription>
+	</field>
+	<field name="totalXProducto" class="java.lang.Double"/>
+	<field name="sku" class="java.lang.String">
+		<fieldDescription><![CDATA[Codigo]]></fieldDescription>
+	</field>
+	<field name="descLarga" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre]]></fieldDescription>
+	</field>
+	<field name="tipoVenta" class="java.lang.String"/>
+	<field name="diasCredito" class="java.lang.String">
+		<fieldDescription><![CDATA[Dias Credito,6]]></fieldDescription>
+	</field>
+	<field name="estadoFactura" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="192" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="216" y="65" width="94" height="20" uuid="4b8fad97-d4b6-4622-8a5f-2d7ec1178915"/>
+				<textFieldExpression><![CDATA[$F{fechaFactura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="116" y="65" width="100" height="20" uuid="19c83be3-3758-4e67-ab84-159224fdacbc"/>
+				<textFieldExpression><![CDATA[$F{serie}+"-"+$F{correlativo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="36" y="137" width="180" height="20" uuid="1be4baf6-baa8-4c96-8854-3bbfbe3958cb"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="234" y="137" width="76" height="20" uuid="f29e75c6-2d7a-4694-b8e4-3d4c855ac406"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="36" y="161" width="274" height="20" uuid="c342e7bb-1ad9-4ca8-9d5f-86b94e098920"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="###0">
+				<reportElement x="0" y="0" width="36" height="20" uuid="f74ac99e-67bc-4150-a392-4b1426ec20f3"/>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="36" y="0" width="150" height="20" uuid="483d830d-254c-4bc9-a2e2-76003bae021a"/>
+				<textFieldExpression><![CDATA[$F{descLarga}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="183" y="0" width="66" height="20" uuid="01eef20f-4962-4e2d-9341-cd735be3ce47"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="246" y="0" width="68" height="20" uuid="15639cb4-e163-4546-afaa-e3f0671f01a2"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{totalXProducto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="10" width="216" height="20" uuid="b4603641-3298-48d7-904f-fc44b72bc87b"/>
+				<textFieldExpression><![CDATA[$F{totalEnLetras}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="266" y="21" width="44" height="20" uuid="50f429df-c2c9-43a5-b92d-781c26335e00"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

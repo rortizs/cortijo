@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facturaFTC" language="groovy" pageWidth="572" pageHeight="792" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="bc74d372-c3b1-4c55-9b12-b5a757c100cd">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idVenta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    a.*,
+    b.cantidad,
+    b.precio,
+    b.total as totalXProducto,
+    c.sku,
+    upper(c.descLarga) as descLarga,
+    upper(d.descripcion) as tipoVenta,
+    f.razonSocial,
+    f.nit as nitEmpresa,
+    f.direccion as direccionEmpresa,
+    f.telefono as telefonoEmpresa,
+    ifnull(g.descripcion,'N/A') as medida,
+    h.userName as entregadoPor,
+    i.diasCredito
+FROM
+    ventas as a
+    inner join ventasDetalle as b on(a.id=b.idVentas)
+    inner join productos as c on(b.idProductos=c.id)
+    inner join tipoVenta as d on(a.idTipoVenta=d.id)
+    inner join empresas as f on(a.idEmpresas=f.id)
+    left join medidas as g on(c.idMedidas2=g.id)
+    inner join usuarios as h on(a.idUsuarios=h.id)
+    left join clientes as i on(a.nit=i.nitC)
+WHERE
+    a.id = $P{idVenta}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[No.]]></fieldDescription>
+	</field>
+	<field name="serie" class="java.lang.String">
+		<fieldDescription><![CDATA[Serie]]></fieldDescription>
+	</field>
+	<field name="correlativo" class="java.lang.String">
+		<fieldDescription><![CDATA[Correlativo]]></fieldDescription>
+	</field>
+	<field name="fechaFactura" class="java.sql.Date">
+		<fieldDescription><![CDATA[Fecha de Factura]]></fieldDescription>
+	</field>
+	<field name="valorFactura" class="java.lang.Double">
+		<fieldDescription><![CDATA[Valor de Factura]]></fieldDescription>
+	</field>
+	<field name="subtotal" class="java.lang.Double">
+		<fieldDescription><![CDATA[Sub Total]]></fieldDescription>
+	</field>
+	<field name="descuento" class="java.lang.Double">
+		<fieldDescription><![CDATA[Descuento]]></fieldDescription>
+	</field>
+	<field name="descuentoP" class="java.lang.String">
+		<fieldDescription><![CDATA[Descuento %]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="iva" class="java.lang.Double">
+		<fieldDescription><![CDATA[IVA]]></fieldDescription>
+	</field>
+	<field name="tipoCambio" class="java.lang.Double">
+		<fieldDescription><![CDATA[Tipo de Cambio]]></fieldDescription>
+	</field>
+	<field name="totalDolares" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total Dolares]]></fieldDescription>
+	</field>
+	<field name="totalEnLetras" class="java.lang.String">
+		<fieldDescription><![CDATA[Total En Letras]]></fieldDescription>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<fieldDescription><![CDATA[NIT]]></fieldDescription>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre]]></fieldDescription>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[Direccion]]></fieldDescription>
+	</field>
+	<field name="idTipoOperacion" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Tipo de Operacion]]></fieldDescription>
+	</field>
+	<field name="idTipoVenta" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Tipo de Venta]]></fieldDescription>
+	</field>
+	<field name="conceptoVenta" class="java.lang.String">
+		<fieldDescription><![CDATA[Concepto de Venta]]></fieldDescription>
+	</field>
+	<field name="idUsuarios" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Realizado Por]]></fieldDescription>
+	</field>
+	<field name="idSucursales" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Establecimiento]]></fieldDescription>
+	</field>
+	<field name="idEmpresas" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Empresa]]></fieldDescription>
+	</field>
+	<field name="created_at" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[Fecha de Creacion]]></fieldDescription>
+	</field>
+	<field name="updated_at" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[Fecha de Actualizacion]]></fieldDescription>
+	</field>
+	<field name="idFormatos" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Partida Automatica]]></fieldDescription>
+	</field>
+	<field name="idPartidas" class="java.lang.Integer">
+		<fieldDescription><![CDATA[Partida Contable]]></fieldDescription>
+	</field>
+	<field name="statusCierre" class="java.lang.String">
+		<fieldDescription><![CDATA[Cierre de Caja]]></fieldDescription>
+	</field>
+	<field name="anulacion" class="java.lang.String">
+		<fieldDescription><![CDATA[Anulada]]></fieldDescription>
+	</field>
+	<field name="cantidad" class="java.lang.Double">
+		<fieldDescription><![CDATA[Cantidad]]></fieldDescription>
+	</field>
+	<field name="precio" class="java.lang.Double">
+		<fieldDescription><![CDATA[Precio]]></fieldDescription>
+	</field>
+	<field name="totalXProducto" class="java.lang.Double"/>
+	<field name="sku" class="java.lang.String">
+		<fieldDescription><![CDATA[Codigo]]></fieldDescription>
+	</field>
+	<field name="descLarga" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre]]></fieldDescription>
+	</field>
+	<field name="tipoVenta" class="java.lang.String"/>
+	<field name="razonSocial" class="java.lang.String">
+		<fieldDescription><![CDATA[Razón Social]]></fieldDescription>
+	</field>
+	<field name="nitEmpresa" class="java.lang.String"/>
+	<field name="direccionEmpresa" class="java.lang.String"/>
+	<field name="telefonoEmpresa" class="java.lang.String"/>
+	<field name="medida" class="java.lang.String"/>
+	<field name="entregadoPor" class="java.lang.String"/>
+	<field name="diasCredito" class="java.lang.String">
+		<fieldDescription><![CDATA[Dias Credito,6]]></fieldDescription>
+	</field>
+	<variable name="totalXProducto_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalXProducto}]]></variableExpression>
+	</variable>
+	<variable name="cantidad_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="135" splitType="Stretch">
+			<image>
+				<reportElement x="190" y="37" width="220" height="96" uuid="01b999fd-fd90-4582-9536-adf94d84942d"/>
+				<imageExpression><![CDATA["./logos/cdc.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="428" y="15" width="62" height="22" uuid="d2c865a8-1536-4d22-a643-19c91724ea3d"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FACT NO.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="490" y="15" width="50" height="22" uuid="c9ec3cb6-f6f7-44e1-98cc-f1015ec12358"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{serie}+"-"+$F{correlativo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="502" splitType="Stretch">
+			<staticText>
+				<reportElement x="37" y="2" width="503" height="37" uuid="4c70f29a-8234-424b-85c0-62eca45ff320"/>
+				<textElement textAlignment="Center">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GARANTIA DE CALIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="39" width="503" height="351" uuid="32adfeb5-d421-4766-bea7-9182da25450e"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[Apreciable cliente, todos nuestros productos marca GILDAN cumplen con los mas exigentes parámetros de calidad, habiendo sido sometidos a cuidadosos controles durante el proceso de fabricación.
+
+La garantía aplica UNICAMENTE para defectos de fábrica si un reclamo es recibido 14 días calendario después de la compra.
+
+El cliente debe contactar al Departamento de Servicio al Cliente (PBX: 2216-0808, info@centraldecamisetas.com) y brindar la siguiente información:
+
+•	Numero de factura y fecha de la compra
+•	Descripción del articulo defectuoso y explicación general del problema
+•	Foto/s de/los articulo/s defectuosos
+
+La garantía de calidad NO aplica en las siguientes situaciones:
+
+1.	La prenda presenta cortes, abrasiones, deterioro o desgaste debido a que no se han tenido en cuenta las condiciones de uso recomendadas por GILDAN.
+2.	El deterioro de una prenda debido a que no se han respetado las instrucciones de cuidado y lavado recomendadas por GILDAN.
+
+Pueden encoger los productos GILDAN?
+
+Si, las prendas GILDAN, y de hecho, cualquier prenda tejida, encoge después del lavado, especialmente las fabricadas con 100% algodón.
+
+Siguiendo las instrucciones de uso y lavado recomendadas por Gildan, los parámetros aceptados de encogimiento son:
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="390" width="503" height="20" uuid="9f376c88-f24d-47c9-a506-71298e0c78a1"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Prendas Jersey 100% algodón (Estilo 5000):		6% de largo x 6% de ancho]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="410" width="503" height="20" uuid="4d9ad3c1-27d8-4926-bbd1-fa8793d023ad"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Prendas Pique 100% algodón (Estilo 3800):		10% de largo x 6% de ancho]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="430" width="503" height="20" uuid="dd028517-9f50-426b-9249-296ae62680ed"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Prendas 50/50 Poliéster Algodón (Estilo 8800)		6% de largo x 6% de ancho]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="450" width="503" height="20" uuid="8d7f59b7-1af3-4fac-a0d7-27f2f957a074"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Prendas 100% poliéster (Estilo 42000):			6% de largo x 6% de ancho]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="470" width="503" height="20" uuid="dc8ba8aa-fcde-46e9-ab1f-a3a95a48e141"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Prendas 65/35 Poliéster Algodón (Estilo 18500, 18600):	7% de largo x 6% de ancho]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+</jasperReport>

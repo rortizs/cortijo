@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facNutripan" language="groovy" pageWidth="612" pageHeight="792" columnWidth="592" leftMargin="20" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b8580b9f-2d70-448f-bafa-7c4a94918e7c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idVenta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    a.id as idVenta,
+    nombre,
+    nit,
+    a.direccion,
+    conceptoVenta,
+    a.total,
+    totalEnLetras,
+    date_format(fechaFactura,'%d/%m/%Y') as fechaFactura,
+    case length(c.sku)
+      when 1 then concat('000000000000',c.sku)
+      when 2 then concat('00000000000',c.sku)
+      when 3 then concat('0000000000',c.sku)
+      when 4 then concat('000000000',c.sku)
+      when 5 then concat('00000000',c.sku)
+      when 6 then concat('0000000',c.sku)
+      when 7 then concat('000000',c.sku)
+      when 8 then concat('00000',c.sku)
+      when 9 then concat('0000',c.sku)
+      when 10 then concat('000',c.sku)
+      when 11 then concat('00',c.sku)
+      when 12 then concat('0',c.sku)
+      when 13 then c.sku
+    end as sku,
+    c.cantidad,
+    c.precio,
+    c.total as totalProducto,
+    d.descLarga as descripcion,
+    a.descuento,
+    a.descuentoP,
+    date_format(fechaFactura,'%d') as dayFactura,
+    date_format(fechaFactura,'%m') as monthFactura,
+    date_format(fechaFactura,'%Y') as yearFactura
+FROM
+    ventas as a
+    left join clientes as b on(a.nombre=b.nombreC)
+    left join ventasDetalle as c on(a.id=c.idVentas)
+    left join productos as d on(c.idProductos=d.id)
+where
+    a.id=$P{idVenta}
+group by
+    c.idProductos]]>
+	</queryString>
+	<field name="idVenta" class="java.lang.Integer"/>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre]]></fieldDescription>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<fieldDescription><![CDATA[NIT]]></fieldDescription>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[Direccion]]></fieldDescription>
+	</field>
+	<field name="conceptoVenta" class="java.lang.String">
+		<fieldDescription><![CDATA[Concepto de Venta]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="totalEnLetras" class="java.lang.String">
+		<fieldDescription><![CDATA[Total En Letras]]></fieldDescription>
+	</field>
+	<field name="fechaFactura" class="java.lang.String"/>
+	<field name="sku" class="java.lang.String"/>
+	<field name="cantidad" class="java.lang.Double">
+		<fieldDescription><![CDATA[Cantidad]]></fieldDescription>
+	</field>
+	<field name="precio" class="java.lang.Double">
+		<fieldDescription><![CDATA[Precio]]></fieldDescription>
+	</field>
+	<field name="totalProducto" class="java.lang.Double"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="descuento" class="java.lang.Double">
+		<fieldDescription><![CDATA[Descuento]]></fieldDescription>
+	</field>
+	<field name="descuentoP" class="java.lang.String">
+		<fieldDescription><![CDATA[Descuento %]]></fieldDescription>
+	</field>
+	<field name="dayFactura" class="java.lang.String"/>
+	<field name="monthFactura" class="java.lang.String"/>
+	<field name="yearFactura" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="84" splitType="Stretch">
+			<textField>
+				<reportElement x="360" y="63" width="72" height="20" uuid="25ebefee-4ad0-4d47-a87c-cc86cf98d7cd"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{dayFactura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="432" y="63" width="73" height="20" uuid="747be414-4423-4b61-bcf7-3f1b6ffa8249"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{monthFactura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="505" y="63" width="67" height="20" uuid="4e972db9-e87d-401e-bc57-696eb7df054e"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{yearFactura}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="43" splitType="Stretch">
+			<textField>
+				<reportElement x="35" y="1" width="327" height="20" uuid="a8dacc57-e150-4de8-aac2-648327ec8bfc"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="35" y="16" width="327" height="20" uuid="d780dd56-9b73-44b1-a2be-73c368afea9b"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="1" width="140" height="20" uuid="d025b1d4-f83f-4e44-8b19-5084491dbd95"/>
+				<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="360" height="15" uuid="908572fb-a451-4828-812a-8dd60c82f3f1"/>
+				<textFieldExpression><![CDATA[$F{sku}+"   "+$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement x="360" y="0" width="72" height="15" uuid="07a75b05-5bb7-4f40-add8-f9e98c30286a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="432" y="0" width="73" height="15" uuid="a31edc28-6078-48e6-84ae-ca501cad119d"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="505" y="0" width="65" height="15" uuid="3f83dfa2-b97a-418a-a51d-d5e20c5d7420"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{totalProducto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="96" splitType="Stretch">
+			<textField>
+				<reportElement x="35" y="6" width="397" height="20" uuid="330c6345-fc68-4228-a8b2-d4882d61f349"/>
+				<textFieldExpression><![CDATA[$F{totalEnLetras}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="505" y="2" width="65" height="20" uuid="e7d90349-1484-49cf-a3da-03f2b3ccdf83"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

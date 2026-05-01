@@ -1,0 +1,62 @@
+# ==========================================
+# IDE y herramientas
+# ==========================================
+.metadata/
+.settings/
+.classpath
+.project
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ==========================================
+# OS
+# ==========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# Librerías de terceros pesadas
+# ==========================================
+erp/models/librerias/tcpdf/
+erp/models/librerias/phpexcel/
+erp/models/librerias/PHPExcel/
+erp/models/librerias/excel/
+erp/models/librerias/pdf/
+
+# ==========================================
+# Archivos generados / binarios
+# ==========================================
+*.pdf
+*.xlsx
+*.xls
+*.zip
+*.tar.gz
+*.gz
+*.rar
+*.sqlite3
+*.sqlite
+
+# ==========================================
+# Logs y temporales
+# ==========================================
+*.log
+tmp/
+erp/tmp/
+erp/logs/
+
+# ==========================================
+# Entorno
+# ==========================================
+.env
+.env.local
+*.env
+
+# ==========================================
+# JasperReports / JasperStudio
+# ==========================================
+MyReports/
+*.jrxml.bak

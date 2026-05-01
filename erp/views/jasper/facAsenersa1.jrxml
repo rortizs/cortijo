@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facAsenersa1" language="groovy" pageWidth="612" pageHeight="468" orientation="Landscape" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8726e3d7-fe90-4f1f-8b6b-3e8ec2f9cd4e">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idVenta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    nombre,
+    nit,
+    clientes.direccionC,
+    conceptoVenta,
+    round((total/1.12),2) as subtotal,
+    iva,
+    total,
+    totalEnLetras,
+    date_format(fechaFactura,'%d/%m/%Y') as fechaFactura,
+    if(idTipoVenta=2,clientes.diasCredito,'') as credito
+FROM
+    ventas left join clientes on(ventas.nit=clientes.nitC)
+where
+    ventas.id=$P{idVenta}]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre]]></fieldDescription>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<fieldDescription><![CDATA[NIT]]></fieldDescription>
+	</field>
+	<field name="direccionC" class="java.lang.String">
+		<fieldDescription><![CDATA[Dirección]]></fieldDescription>
+	</field>
+	<field name="conceptoVenta" class="java.lang.String">
+		<fieldDescription><![CDATA[Concepto de Venta]]></fieldDescription>
+	</field>
+	<field name="subtotal" class="java.lang.Double"/>
+	<field name="iva" class="java.lang.Double">
+		<fieldDescription><![CDATA[IVA]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="totalEnLetras" class="java.lang.String">
+		<fieldDescription><![CDATA[Total En Letras]]></fieldDescription>
+	</field>
+	<field name="fechaFactura" class="java.lang.String"/>
+	<field name="credito" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="67" splitType="Stretch">
+			<textField>
+				<reportElement x="368" y="47" width="100" height="20" uuid="010276b3-1ea6-473c-a8f3-323ae1db335a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechaFactura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="491" y="47" width="50" height="20" uuid="42a49894-6a9b-4768-b020-4685addfe006"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{credito}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="48" splitType="Stretch">
+			<textField>
+				<reportElement x="60" y="-3" width="380" height="20" uuid="a5dbab19-86cc-4e58-a5af-80b4fac62081"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="59" y="20" width="380" height="20" uuid="e92d5f10-c216-445a-acaf-dc5e8553567f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccionC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="468" y="27" width="104" height="20" uuid="feadb22f-f025-424e-b656-7eca6f81828a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="125">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="101" y="15" width="352" height="20" uuid="dc73c40c-50fa-408e-b2f2-5ca46404f9e9"/>
+				<textFieldExpression><![CDATA[$F{conceptoVenta}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="468" y="15" width="73" height="20" uuid="09cab410-6e57-4fdf-a0d3-45d2fea94389"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="368" y="55" width="85" height="20" uuid="c5e53215-509c-456e-8cf5-8dc721544ead"/>
+				<text><![CDATA[IVA 12%]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="468" y="55" width="73" height="20" uuid="63d89934-2b21-46d7-85a8-b0f6156ba271"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{iva}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="43" y="15" width="43" height="20" uuid="64d2b2dd-98f4-4877-a9cd-2b1c3d274b2f"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[1]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement x="43" y="19" width="425" height="20" uuid="cb88ac7a-f4c0-4ca5-8cc8-03d39117967c"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalEnLetras}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="468" y="4" width="73" height="20" uuid="57028824-9c0a-4e93-9b53-3600afc93f4e"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

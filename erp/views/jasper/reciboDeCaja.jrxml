@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reciboDeCaja" language="groovy" pageWidth="612" pageHeight="360" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0ba01e79-59e9-44aa-b958-7673c07d234d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idRecibos" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    day(cxc.created_at) as day,
+    month(cxc.created_at) as month,
+    year(cxc.created_at) as year,
+    clientes.nombreC,
+    cxc.montoEnLetras,
+    cxc.concepto,
+    cxc.debitos,
+    cxc.chequeNo,
+    cxc.noDeCuenta,
+    cxc.nombreDelBanco,
+    cxc.nombreDelaCuenta,
+    cxc.valorDeCheque,
+    if(idMonedas=1,'X','') as quetzales,
+    if(idMonedas=2,'X','') as dolares
+FROM
+    cxc
+    inner join clientes on(cxc.idClientes=clientes.id)
+WHERE
+    cxc.id = $P{idRecibos};]]>
+	</queryString>
+	<field name="month" class="java.lang.Long"/>
+	<field name="chequeNo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombreDelaCuenta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="montoEnLetras" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="day" class="java.lang.Long"/>
+	<field name="quetzales" class="java.lang.String"/>
+	<field name="year" class="java.lang.Long"/>
+	<field name="concepto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="noDeCuenta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="debitos" class="java.lang.Double">
+		<fieldDescription><![CDATA[Debitos]]></fieldDescription>
+	</field>
+	<field name="dolares" class="java.lang.String"/>
+	<field name="nombreDelBanco" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valorDeCheque" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombreC" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre del Cliente,3]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="320" splitType="Stretch">
+			<textField>
+				<reportElement x="141" y="80" width="36" height="20" uuid="a2e2b9de-718b-468d-bb62-beedb07d75e0"/>
+				<textFieldExpression><![CDATA[$F{day}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="191" y="80" width="56" height="20" uuid="66035fe1-87a4-41dd-9e1a-cd2efdcfbd5a"/>
+				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="259" y="80" width="46" height="20" uuid="03309267-9ac3-4090-8486-0fb349ed49a6"/>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="339" y="80" width="25" height="20" uuid="f9f5926d-f4e5-4013-9059-b7a489b0fb4c"/>
+				<textFieldExpression><![CDATA[$F{quetzales}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="378" y="80" width="24" height="20" uuid="5d149f9a-7c17-4f0d-baee-eb164e5be0d1"/>
+				<textFieldExpression><![CDATA[$F{dolares}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="80" width="132" height="20" uuid="d2676ff7-f3e7-4422-ae8f-c12e4feb813a"/>
+				<textFieldExpression><![CDATA[$F{debitos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="100" width="512" height="20" uuid="ca49c2f6-8252-4f55-b2b9-7090f8458567"/>
+				<textFieldExpression><![CDATA[$F{nombreC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="120" width="512" height="20" uuid="4ccf355d-1652-41f4-8460-b2b719b7a2d6"/>
+				<textFieldExpression><![CDATA[$F{montoEnLetras}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="160" width="512" height="20" uuid="d27d5e3e-d0a4-4c0b-94fd-d0d84517a910"/>
+				<textFieldExpression><![CDATA[$F{concepto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="200" width="60" height="20" uuid="b760ae73-e4fa-4cc2-baff-d31a50a978ac"/>
+				<textFieldExpression><![CDATA[$F{chequeNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="60" y="200" width="100" height="20" uuid="60916639-e210-46b1-9d58-ac051e6d4c95"/>
+				<textFieldExpression><![CDATA[$F{noDeCuenta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="200" width="127" height="20" uuid="a70384b8-ec4d-430c-91ff-ec7ee616631e"/>
+				<textFieldExpression><![CDATA[$F{nombreDelBanco}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="287" y="200" width="185" height="20" uuid="2b1620ff-17c0-40b3-89d2-7361b3da29a1"/>
+				<textFieldExpression><![CDATA[$F{nombreDelaCuenta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="472" y="200" width="100" height="20" uuid="7c8a2706-e281-46b4-8dec-179aa85ee4ce"/>
+				<textFieldExpression><![CDATA[$F{valorDeCheque}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+</jasperReport>

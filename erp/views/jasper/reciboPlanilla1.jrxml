@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reciboPlanilla1" language="groovy" pageWidth="612" pageHeight="396" orientation="Landscape" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="eff71257-8657-4f44-a72b-fe21a713f1e8">
+	<property name="ireport.zoom" value="1.1"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="76"/>
+	<parameter name="idHrmEmpleados" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idHrmPlanilla" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaInicio" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFin" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idHrmDepartamentos" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+                    g.cuenta as centrosCosto,
+                    concat(a.primerNombre,' ',a.segundoNombre,' ',a.tercerNombre,' ',a.primerApellido,' ',a.segundoApellido,' ',a.apellidoCasada) as nombreEmpleado,
+                    b.descripcion as puesto,
+                    e.descripcion as cdr,
+                    date_format(a.fechaIngreso,'%d-%m-%Y') as fechaIngreso,
+                    a.salarioOrdinario,
+                    (a.salarioOrdinario/2) as quincena,
+                    ((a.salarioOrdinario/2)+a.bonificacion+ifnull((select sum(valor) from hrmComisiones where idHrmEmpleados=a.id and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0)) as totalRecibir,
+                    (
+				    ifnull((select sum(valor) from hrmAnticipos where idHrmEmpleados=a.id and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) +
+                    ifnull((select valor from hrmPrestamos where idHrmEmpleados=a.id and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0)+
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='CREDITO' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0)+
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='OTROS' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0)+
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='FALTANTES' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0)+
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='UNIFORMES' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0)+
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='BANTRAB' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) +
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='SEGURO' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0))
+                    as totalDeducciones,
+					((a.salarioOrdinario/2)+a.bonificacion+ifnull((select sum(valor) from hrmComisiones where idHrmEmpleados=a.id and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0))-
+					    (
+				    ifnull((select sum(valor) from hrmAnticipos where idHrmEmpleados=a.id and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) +
+                    ifnull((select valor from hrmPrestamos where idHrmEmpleados=a.id and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0)+
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='CREDITO' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0)+
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='OTROS' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0)+
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='FALTANTES' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0)+
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='UNIFORMES' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0)+
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='BANTRAB' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) +
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='SEGURO' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0))
+					as totalQuincena,
+                    a.bonificacion,
+                    c.descripcion as formaPago,
+                    d.seguroSocial,
+                    d.isr,
+                    d.deduccionSinComprobacion,
+                    d.ingresoSujetosISR,
+                    ifnull((select sum(valor) from hrmAnticipos where idHrmEmpleados=a.id and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) as anticipos,
+                    ifnull((select valor from hrmPrestamos where idHrmEmpleados=a.id and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) as prestamosPQ,
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='CREDITO' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) as creditoPQ,
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='OTROS' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) as otrosPQ,
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='FALTANTES' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) as faltantesPQ,
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='UNIFORMES' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) as uniformes,
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='BANTRAB' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) as bantrab,
+                    ifnull((select sum(valor) from hrmOtrosPagosDescuentos where idHrmEmpleados=a.id and idHrmTipoPago=2 and descripcion='SEGURO' and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) as seguro,
+                    ((if(DATEDIFF($P{fechaFin}, a.fechaIngreso) + 1>15,15,DATEDIFF($P{fechaFin}, a.fechaIngreso)+1))-ifnull((SELECT
+                    (CASE idHrmTipoEvento
+                        WHEN 2 THEN DATEDIFF(end_at, if(month(init_at)=month(date($P{fechaInicio})),init_at,$P{fechaInicio}))
+                        WHEN 4 THEN dias
+                        WHEN 6 THEN dias
+                        WHEN 7 THEN dias
+                    END) AS diasDesc
+                    FROM
+                        hrmEventos
+                    WHERE
+                        idHrmEmpleados=a.id and init_at>=$P{fechaInicio} and end_at<=$P{fechaFin} and idHrmTipoEvento in (2, 4 , 6, 7)),0)) as diasTrabajadosPQ,
+                    ((if(DATEDIFF($P{fechaFin}, a.fechaIngreso) + 1>15,15,DATEDIFF($P{fechaFin}, a.fechaIngreso)+1))-ifnull((SELECT
+                    (CASE idHrmTipoEvento
+                        WHEN 2 THEN DATEDIFF(end_at, if(month(init_at)=month(date($P{fechaInicio})),init_at,$P{fechaInicio}))
+                        WHEN 4 THEN dias
+                        WHEN 6 THEN dias
+                        WHEN 7 THEN dias
+                    END) AS diasDesc
+                    FROM
+                        hrmEventos
+                    WHERE
+                        idHrmEmpleados=a.id and init_at>=$P{fechaInicio} and end_at<=$P{fechaFin} and idHrmTipoEvento in (2, 4 , 6, 7)),0)) as diasTrabajadosSQ,
+                    ifnull((select sum(valor) from hrmComisiones where idHrmEmpleados=a.id and init_at=$P{fechaInicio} and end_at=$P{fechaFin}),0) as comisiones,
+                    idFormaCalculoPrestaciones as tipoCalculoISR
+                from
+                    hrmEmpleados as a
+                    left join hrmPuestos as b on(a.idHrmPuestos=b.id)
+                    left join hrmFormasPago as c on(a.idHrmFormasPago=c.id)
+                    left join paises as d on(a.idPaises=d.id)
+                    left join hrmSedes as e on(a.idHrmSedes=e.id)
+                    left join hrmDepartamentos as f on(a.idHrmDepartamentos=f.id)
+                    left join centrosCosto as g on(f.idCentrosCosto=g.id)
+               where
+                    a.idHrmDepartamentos=$P{idHrmDepartamentos} and a.idHrmPlanillas=$P{idHrmPlanilla}
+                ORDER BY
+                    a.fechaIngreso ASC;]]>
+	</queryString>
+	<field name="centrosCosto" class="java.lang.String"/>
+	<field name="nombreEmpleado" class="java.lang.String"/>
+	<field name="puesto" class="java.lang.String"/>
+	<field name="cdr" class="java.lang.String"/>
+	<field name="fechaIngreso" class="java.lang.String">
+		<fieldDescription><![CDATA[Fecha de Ingreso,3]]></fieldDescription>
+	</field>
+	<field name="salarioOrdinario" class="java.lang.Double">
+		<fieldDescription><![CDATA[Salario Ordinario,3]]></fieldDescription>
+	</field>
+	<field name="quincena" class="java.lang.Double"/>
+	<field name="totalRecibir" class="java.lang.Double"/>
+	<field name="totalDeducciones" class="java.lang.Double"/>
+	<field name="totalQuincena" class="java.lang.Double"/>
+	<field name="bonificacion" class="java.lang.Double">
+		<fieldDescription><![CDATA[Bonificacion Ley,3]]></fieldDescription>
+	</field>
+	<field name="formaPago" class="java.lang.String"/>
+	<field name="seguroSocial" class="java.lang.String">
+		<fieldDescription><![CDATA[% Seguro Social,4]]></fieldDescription>
+	</field>
+	<field name="isr" class="java.lang.String">
+		<fieldDescription><![CDATA[% ISR,4]]></fieldDescription>
+	</field>
+	<field name="deduccionSinComprobacion" class="java.lang.String">
+		<fieldDescription><![CDATA[Ingresos Exentos ISR,4]]></fieldDescription>
+	</field>
+	<field name="ingresoSujetosISR" class="java.lang.String">
+		<fieldDescription><![CDATA[Ingreso Sujetos ISR,4]]></fieldDescription>
+	</field>
+	<field name="anticipos" class="java.lang.Double">
+		<fieldDescription><![CDATA[Horas Extras Mixtas]]></fieldDescription>
+	</field>
+	<field name="prestamosPQ" class="java.lang.Double"/>
+	<field name="creditoPQ" class="java.lang.Double"/>
+	<field name="otrosPQ" class="java.lang.Double"/>
+	<field name="faltantesPQ" class="java.lang.Double"/>
+	<field name="uniformes" class="java.lang.Double"/>
+	<field name="bantrab" class="java.lang.Double"/>
+	<field name="seguro" class="java.lang.Double"/>
+	<field name="diasTrabajadosPQ" class="java.lang.Double"/>
+	<field name="diasTrabajadosSQ" class="java.lang.Double"/>
+	<field name="comisiones" class="java.lang.Double"/>
+	<field name="tipoCalculoISR" class="java.lang.Integer"/>
+	<variable name="totalRecibir" class="java.lang.Double" resetType="Page" calculation="Sum">
+		<variableExpression><![CDATA[($F{salarioOrdinario}/2)+$F{bonificacion}+$F{comisiones}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="33">
+			<textField>
+				<reportElement x="51" y="21" width="194" height="12" uuid="a9549577-e938-4929-a2f1-6c3ac3f81586"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Tiempo y Comunicacion"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="323">
+			<textField>
+				<reportElement x="0" y="48" width="200" height="12" uuid="184e0b73-699b-44cd-8caf-0059f61ae56e"/>
+				<textElement markup="none">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Dias laborados"+' '+$F{diasTrabajadosPQ}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="36" width="200" height="12" uuid="d1098fbc-8bd5-4474-9870-dd6d8c22c3c6"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Puesto: "+$F{puesto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="12" width="222" height="12" uuid="b5ceb225-9381-4d03-935c-b675fcbc30b7"/>
+				<textElement markup="none">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Periodo de pago: Primera Quincena"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="0" y="84" width="262" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="0c485569-135e-439f-9a28-c3ceebe1e9d3"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Verdana" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Bonificacion decreto 37-2001:"+' '+$F{bonificacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="60" width="200" height="12" uuid="2fbe4b19-1270-4303-adaf-2a4b2c6d51ea"/>
+				<textElement markup="none">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Fecha emision"+' '+$F{fechaIngreso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="24" width="356" height="12" uuid="9cda32e4-0375-4a7d-b1fe-37d3c50c96aa"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombreEmpleado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="72" width="186" height="12" uuid="b3bba4b9-4fc3-420d-ab0a-c607e7405c32"/>
+				<textElement markup="none">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["salario base:"+' '+$F{salarioOrdinario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="140" height="12" uuid="5e36d479-9905-4569-a2c4-51bcc6d7b79a"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Recibo Pago de quincena]]></text>
+			</staticText>
+			<line>
+				<reportElement x="330" y="284" width="100" height="1" uuid="fd5e94f1-617d-402c-a375-844c9ed79819"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="231" width="100" height="12" uuid="3ce21201-aa12-4557-b3f0-8e7d1b1f6e2d"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bantrab}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="118" width="100" height="12" uuid="b047e845-739c-436b-8b84-6b597103c075"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bonificacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="171" width="100" height="12" uuid="1ee45b01-f37c-4236-a52d-36db7c030c54"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prestamosPQ}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="140" y="159" width="190" height="12" uuid="8d1b2b5f-d00f-4834-9ebe-37f00d3c7cb1"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[IGGS Mensual a pagar 1ra Quincena]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="142" width="190" height="12" uuid="a2a2b6e0-46ba-40d3-8bf5-33fd35e5b00b"/>
+				<textElement markup="none">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Total a recibir:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="183" width="190" height="12" uuid="c411b8d1-67b3-4aaa-a2b4-a910716db5e9"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Creditos Empleado 1ra Quincena]]></text>
+			</staticText>
+			<line>
+				<reportElement x="330" y="153" width="100" height="1" uuid="c5820737-759b-42d3-866b-4187290f0fed"/>
+			</line>
+			<staticText>
+				<reportElement x="140" y="243" width="190" height="12" uuid="3ec5b906-2460-4d81-b706-0fce0f2bac6a"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Descuento Seguro Vida y Gastos Medicos]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="195" width="100" height="12" uuid="d7e4c164-8725-496f-879c-f7268a3d0d46"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{otrosPQ}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="140" y="130" width="190" height="12" uuid="b65a03dc-b5a2-4b8e-b830-fdeea349d6c5"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Bonificacion Por Cumplimiento De Metas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="171" width="190" height="12" uuid="9b985afe-360f-4c33-93b3-8d57fc923ddc"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Prestamos Internos 1ra Quincena]]></text>
+			</staticText>
+			<line>
+				<reportElement x="330" y="289" width="100" height="1" uuid="a28657be-5723-4526-b3fa-929a15a38520"/>
+			</line>
+			<staticText>
+				<reportElement x="140" y="106" width="190" height="12" uuid="c523b3f2-99d4-4e6d-8e02-46855e96845d"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Total Sueldo Ordinario 1ra Quincena]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="159" width="100" height="12" uuid="095fa76c-bd26-418e-850c-ac9c9deaf749"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[                                 -]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="183" width="100" height="12" uuid="a6a2f7ad-2423-42dd-83fa-05ff565334e6"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{creditoPQ}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="243" width="100" height="12" uuid="ba368486-16b5-4cd5-98fc-2dc37a707e2e"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{seguro}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="330" y="267" width="100" height="1" uuid="e86e4099-d950-494d-9c61-4a763faa6c1f"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="219" width="100" height="12" uuid="62047338-a271-40b8-8f91-b96c2235dc2d"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uniformes}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="140" y="231" width="190" height="12" uuid="ff9fc62e-368b-4597-ab1c-27f4096f1783"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Prestamos Bantrab]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="207" width="190" height="12" uuid="0cc8b2db-ba0e-4b38-ad59-29091bfa6dcb"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Faltantes 1ra Quincena]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="272" width="190" height="12" uuid="cd849998-468b-4372-b6b0-c587eddc5cae"/>
+				<textElement markup="none">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Total a pagar 2da Quincena]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="118" width="190" height="12" uuid="a327e825-785e-42ba-9435-e5056709bef5"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Bono Decreto 37-2001]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="130" width="100" height="12" uuid="44ea017c-7ac2-480a-a7ed-cbf1d8e52552"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{comisiones}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="207" width="100" height="12" uuid="2e9e3352-c267-434a-93e7-57a37c9bced5"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{faltantesPQ}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="140" y="255" width="190" height="12" uuid="21791e7d-ab81-44c6-95e0-0c8aea165b4b"/>
+				<textElement markup="none">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Total deducciones:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="219" width="190" height="12" uuid="d4b161a7-d9e9-4d64-9a4c-f7ca41e62fa3"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Descuentos Uniformes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="300" width="222" height="12" uuid="f0c60900-9be1-41be-9b79-930f6a77a07e"/>
+				<textElement markup="none">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Forma De Pago: "+' '+$F{formaPago}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="140" y="195" width="190" height="12" uuid="42cc9ed8-8bf3-4e6a-8f61-dc6333cb086d"/>
+				<textElement>
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Otros Descuentos 1ra Quincena]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="311" width="356" height="12" uuid="306fac26-120d-4a2f-93aa-14ffac12197d"/>
+				<textElement markup="none">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Recibi conforme: "+$F{nombreEmpleado}+"F:_____________"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="106" width="100" height="12" uuid="03f818c1-61c4-4b62-8f19-966643a1c843"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{salarioOrdinario}/2]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="255" width="100" height="12" uuid="eccba4e3-8dcc-4015-9c20-2fe9f5c41cd8"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalDeducciones}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="272" width="100" height="12" uuid="193b3ac9-6b1e-4d84-88e4-3e2697f648d3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalQuincena}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="330" y="142" width="100" height="11" uuid="71955013-8692-4844-b123-d4d21740f875"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalRecibir}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

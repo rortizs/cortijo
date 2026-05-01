@@ -1,0 +1,92 @@
+table {
+    font-size: 0.8em !important;
+    color: #000 !important;
+    font-weight: 400 !important;
+}
+table tbody tr td {
+    padding: 2px !important;
+}
+table tfoot tr td {
+    padding: 2px !important;
+}
+th, td {
+    white-space: nowrap;
+}
+
+table thead .sorting_asc::after, .sorting::after, .sorting_desc::after {
+    bottom: 1px !important;
+}
+
+table thead tr td {
+    padding: 2px !important;
+    border-bottom: none !important;
+    background-color: #1A3973 !important;
+    color: #FFF !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+}
+.form-control {
+    height: 30px !important;
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+    border-radius: 3px !important;
+}
+.form-signin {
+    max-width: 500px !important;
+    margin-top: 5px !important;
+}
+.modal {
+    text-align: center;
+    padding: 0 !important;
+}
+.modal:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px;
+}
+
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}
+.modal-header {
+    padding: 10px !important;
+    background-color: #1A3973 !important;
+    color: #fff !important;
+}
+/**/
+body{
+    background-color: #185ca3 !important;
+}
+.empresas {
+    width: 75% !important;
+    height: 400px !important;
+    background-color: #FFF !important;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border:2px solid #28B4E9 !important;
+    border-radius: 10px !important;
+}
+.listadoEmpresas{
+    padding: 2% !important;
+}
+.logoCubix{
+    padding: 10% !important;
+}
+.listadoEmpresas h1{
+    color: #1A3973 !important;
+}
+.empresas .btn-primary{
+    background-color: #1A3973 !important;
+}
+.modal-content{
+    border:2px solid #28B4E9 !important;
+}

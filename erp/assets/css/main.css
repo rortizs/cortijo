@@ -1,0 +1,434 @@
+table{
+    font-size: 0.8em !important;
+    color: #000 !important;
+    font-weight: 400 !important;
+}
+
+table thead tr td{
+    padding:2px !important;
+    border-bottom: none !important;
+    background-color: #286090 !important;
+    color:#FFF !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+}
+table tbody tr td{
+    padding:2px !important;
+    height: 30px !important;
+}
+table tfoot tr td{
+    padding:2px !important;
+}
+th, td {
+    white-space: nowrap;
+}
+
+/*table td:first-child{
+    width: 10px !important;
+}*/
+
+table thead .sorting_asc::after{
+    content: '' !important;
+} 
+table thead .sorting_desc::after{
+    content: '' !important;
+} 
+
+table thead .sorting_asc::after, .sorting::after, .sorting_desc::after {
+    bottom: 1px !important;
+}
+.dataTables_length, .dataTables_filter {
+    padding: 0px !important;
+}
+/*
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: right;
+    width: 50% !important;
+    padding-right: 36px !important;
+    margin-right: 16px !important;
+}
+*/
+.btn-controller {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    text-align: center;
+}
+.btn-controller2 {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    text-align: left;
+}
+textArea{
+    resize: none !important;
+}
+.input-group-addon{
+    cursor: pointer !important;
+}
+fieldset {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+    box-shadow:  0px 0px 0px 0px #000;
+}
+
+legend{
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width:auto;
+    padding:0 10px;
+    border-bottom:none;
+}
+
+fieldset .row{
+    margin-top: 0 !important;
+}
+
+.modal-header {
+    padding: 10px !important;
+    background-color: #286090 !important;
+    color: #fff !important;
+}
+.modal-body{
+    padding-top: 5px !important;
+}
+.modal-lg {
+    width: 90% !important;
+}
+#preview {
+    width: 150px !important;
+    max-height: 160px !important;
+}
+.breadcrumb {
+    background-color: #286090 !important;
+    color: #FFF !important;
+    border: 1px solid #28B4E9;
+}
+.top-nav ul.top-menu>li>a {
+    background: #286090 !important;
+    color: #FFF !important;
+    -webkit-border-radius: 4px !important;
+    border: 1px solid #286090 !important;
+}
+.top-nav ul.top-menu>li>a>span {
+    color: #FFF !important;
+}
+
+.top-nav ul.top-menu>li>a:hover,.top-nav ul.top-menu>li>a:focus {
+    background:#57c8f1 !important;
+    border: 1px solid #57c8f1 !important;
+}
+.top-nav ul.top-menu > li .dropdown-menu.logout {
+    width: auto !important;
+}
+.top-nav .dropdown-menu.extended.logout {
+    top: 40px !important;
+}
+.dropdown-menu.extended.logout>li>a{
+    color:#286090 !important;
+}
+.dropdown-menu.extended.logout {
+    padding: 0px !important;
+}
+.full-width .dropdown-menu.extended.logout>li>a:hover {
+    background:none !important;
+    color:#FFF !important;
+}
+.dropdown-menu.extended.logout>li>a:hover {
+    background:none !important;
+    color:#57c8f1 !important;
+}
+.dropdown-menu.extended.logout>li>a:hover i {
+    color:#57c8f1 !important;
+}
+#dynamicTable_length>label{
+    color:#286090 !important;
+}
+#dynamicTable_filter>label{
+    color:#286090 !important;
+}
+#dynamicTable_info{
+    color:#286090 !important;
+}
+.logo{
+    cursor: pointer !important;
+}
+.modal {
+    text-align: center;
+    padding: 0!important;
+}
+
+.modal:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -4px;
+}
+
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}
+
+#componentList td:first-child{
+    width: auto !important;
+}
+
+.modal-md {
+    width: 800px;
+}
+.breadcrumbs-alt{
+    margin: -3px 20px 0 0 !important;
+}
+.breadcrumb a {
+    color: #FFF !important;
+}
+.breadcrumbs-alt a {
+    background: #286090 !important;
+    color: #FFF !important;
+}
+
+.breadcrumbs-alt a::before {
+    border-color: #286090 #286090 #286090 rgba(0, 0, 0, 0) !important;
+}
+
+.breadcrumbs-alt a::after {
+    border-left: 1em solid #286090 !important;
+}
+
+.top-nav {
+    margin-top: 22px !important;
+}
+
+#message{
+    float: none !important;
+    position: absolute !important;
+    right: 15px !important;
+    top: 95px !important;
+}
+
+.panel-heading {
+    background: #286090 !important;
+    color: #FFF !important;
+}
+#loader {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 9999;
+}
+.child-loader {
+    left: 0;
+    right: 0;
+    top: 50%;
+    bottom: 0;
+    position: fixed;
+    height: 60px!important;
+    text-align: center;
+    z-index: 9999;
+}
+.dataTables_scrollBody {
+    overflow:scroll !important; 
+}
+
+.bootstrap-select .btn-default{
+    background-color: #FFF !important;
+    color:#767676 !important; 
+}
+
+.txtTotal {
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 1.8em !important;
+    padding-top: 3px !important;
+}
+
+.total {
+    text-transform: uppercase;
+    font-size: 1.8em !important;
+    padding-top: 3px !important;
+    color: #FF0000 !important;
+}
+
+#sidebar .sub-menu>.sub li a {
+    cursor: pointer !important;
+}
+
+a{
+    cursor: pointer !important;
+}
+
+.action{
+    width: 35px !important;
+    text-align: center !important;
+}
+
+.statusBancos{
+    position: relative !important;
+    top: -9px !important;
+    padding-top: 8px !important;
+    padding-bottom: 9px !important;
+    right: -35px !important;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;    
+}
+.btn-back{
+    position: relative !important;
+    top: -13px !important;
+    padding-top: 8px !important;
+    padding-bottom: 9px !important;
+    right: -25px !important;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;    
+}
+.table-success{
+    background-color: #c3e6cb;
+}
+.table-warning{
+    background-color: #ffeeba;
+}
+header{
+    background-color: #185CA3 !important;
+}
+.panel {
+    border: 1px solid #28B4E9 !important;
+}
+
+/* From uiverse.io by @abrahamcalsin */
+.plan-card {
+  background: #fff;
+  width: 15rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  border-radius: 10px;
+  border-bottom: 4px solid #000446;
+  box-shadow: 0 6px 30px rgba(207, 212, 222, 0.3);
+  font-family: "Poppins", sans-serif;
+}
+
+.plan-card h2 {
+  margin-bottom: 15px;
+  font-size: 27px;
+  font-weight: 600;
+}
+
+.plan-card h2 span {
+  display: block;
+  margin-top: -4px;
+  color: #4d4d4d;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.etiquet-price {
+  position: relative;
+  background: #fdbd4a;
+  width: 14.46rem;
+  margin-left: -0.65rem;
+  padding: .2rem 1.2rem;
+  border-radius: 5px 0 0 5px;
+}
+
+.etiquet-price p {
+  margin: 0;
+  padding-top: .4rem;
+  display: flex;
+  font-size: 1.9rem;
+  font-weight: 500;
+}
+
+.etiquet-price p:before {
+  content: "$";
+  margin-right: 5px;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.etiquet-price p:after {
+  content: "/ handle";
+  margin-left: 5px;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.etiquet-price div {
+  position: absolute;
+  bottom: -23px;
+  right: 0px;
+  width: 0;
+  height: 0;
+  border-top: 13px solid #c58102;
+  border-bottom: 10px solid transparent;
+  border-right: 13px solid transparent;
+  z-index: -6;
+}
+
+.benefits-list {
+  margin-top: 16px;
+}
+
+.benefits-list ul {
+  padding: 0;
+  font-size: 14px;
+}
+
+.benefits-list ul li {
+  color: #4d4d4d;
+  list-style: none;
+  margin-bottom: .2rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.benefits-list ul li svg {
+  width: .9rem;
+  fill: currentColor;
+}
+
+.benefits-list ul li span {
+  font-weight: 300;
+}
+
+.button-get-plan {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.2rem;
+}
+
+.button-get-plan a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000446;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: .8rem;
+  letter-spacing: .05rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.button-get-plan a:hover {
+  transform: translateY(-3%);
+  box-shadow: 0 3px 10px rgba(207, 212, 222, 0.9);
+}
+
+.button-get-plan .svg-rocket {
+  margin-right: 10px;
+  width: .9rem;
+  fill: currentColor;
+}

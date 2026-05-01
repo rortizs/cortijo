@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facturaSuple" language="groovy" pageWidth="612" pageHeight="396" orientation="Landscape" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="d681caab-ddd9-4695-b48b-8a591dc83e4b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idVenta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    UPPER(ventas.nombre) AS cliente,
+    UPPER(ventas.direccion) AS direccion,
+    ventas.nit,
+    DAY(ventas.fechaFactura) AS day,
+    MONTH(ventas.fechaFactura) AS month,
+    YEAR(ventas.fechaFactura) AS year,
+    UPPER(ventas.conceptoVenta) AS conceptoVenta,
+    if(ventas.tipoCambio!='1.0000',ventas.totalDolares,ventas.total) AS total,
+    if(ventas.tipoCambio!='1.0000',ventas.totalEnLetrasDolares,ventas.totalEnLetras) AS totalEnLetras,
+    if(ventas.tipoCambio!='1.0000',concat('T.C.: ',ventas.tipoCambio),'') as tipoCambio,
+    if(ventas.tipoCambio!='1.0000','$','Q') as moneda,
+    ventasDetalle.cantidad,
+    ventasDetalle.descLarga,
+    ventasDetalle.total as totalProducto
+FROM
+    ventas left join
+    ventasDetalle on(ventas.id=ventasDetalle.idVentas)
+WHERE
+   ventas.id =$P{idVenta}]]>
+	</queryString>
+	<field name="cliente" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[Direccion Facturacion]]></fieldDescription>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<fieldDescription><![CDATA[NIT]]></fieldDescription>
+	</field>
+	<field name="day" class="java.lang.Long"/>
+	<field name="month" class="java.lang.Long"/>
+	<field name="year" class="java.lang.Long"/>
+	<field name="conceptoVenta" class="java.lang.String">
+		<fieldDescription><![CDATA[Concepto de Venta]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="totalEnLetras" class="java.lang.String">
+		<fieldDescription><![CDATA[Total En Letras]]></fieldDescription>
+	</field>
+	<field name="tipoCambio" class="java.lang.String">
+		<fieldDescription><![CDATA[Tipo de Cambio]]></fieldDescription>
+	</field>
+	<field name="moneda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cantidad" class="java.lang.Double">
+		<fieldDescription><![CDATA[Cantidad]]></fieldDescription>
+	</field>
+	<field name="descLarga" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totalProducto" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="138" splitType="Stretch">
+			<textField>
+				<reportElement x="15" y="85" width="366" height="20" uuid="3289089a-cd05-4c02-80b3-7fc1c0cac19c"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="15" y="105" width="366" height="20" uuid="cb11f475-2874-469d-9453-657240638d50"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="472" y="85" width="100" height="20" uuid="67b94523-73cc-4171-94ed-06fb5311cf90"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="408" y="58" width="50" height="20" uuid="4d27fd7e-1e71-4d21-929f-57306d617ded"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{day}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="471" y="58" width="51" height="20" uuid="2a5fdd0d-9fd5-4d1f-8891-48be278736b6"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="538" y="58" width="34" height="20" uuid="ad513a9c-b656-426e-85aa-f526bcd9310d"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<elementGroup/>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="76" y="0" width="416" height="20" uuid="5bb43e97-64d2-41d5-a2f4-e30deb1299cd"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descLarga}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="492" y="0" width="80" height="20" uuid="46e9ce12-442d-40ba-b9aa-e79d645824c6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalProducto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="15" y="0" width="61" height="20" uuid="0cbcaacb-6c78-48cc-945a-ba2074278df2"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="492" y="0" width="23" height="20" uuid="e0785980-d64d-41a2-8bde-9b6c06bc6445"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="71">
+			<textField>
+				<reportElement x="41" y="47" width="451" height="20" uuid="1c0de8b9-9947-4240-83be-730bb166093c"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalEnLetras}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="492" y="47" width="79" height="20" uuid="77c1a801-600e-4c70-9bf4-3ba75b1b4e6f"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="15" y="15" width="126" height="20" uuid="10613bbc-cc7d-4472-a273-75b1ec48e5bb"/>
+				<textElement verticalAlignment="Bottom" markup="none">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipoCambio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="492" y="47" width="23" height="20" uuid="e5efb19b-8c45-4795-8255-cf9d3b94eebe"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{moneda}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

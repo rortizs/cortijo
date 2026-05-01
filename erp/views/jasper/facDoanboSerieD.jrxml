@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facDoanbo" language="groovy" pageWidth="369" pageHeight="600" columnWidth="329" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="49eef07f-7ecc-4748-924b-725081663898">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idVenta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    day(ventas.fechaFactura) as day,
+    month(ventas.fechaFactura) as month,
+    year(ventas.fechaFactura) as year,
+    ventas.nombre,
+    ventas.direccion,
+    ventas.nit,
+    ventas.total,
+    ventas.conceptoVenta,
+    ventas.totalEnLetras
+FROM
+    ventas
+WHERE
+    ventas.id=$P{idVenta};]]>
+	</queryString>
+	<field name="day" class="java.lang.Long"/>
+	<field name="month" class="java.lang.Long"/>
+	<field name="year" class="java.lang.Long"/>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre]]></fieldDescription>
+	</field>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[Direccion]]></fieldDescription>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<fieldDescription><![CDATA[NIT]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="conceptoVenta" class="java.lang.String">
+		<fieldDescription><![CDATA[Concepto de Venta]]></fieldDescription>
+	</field>
+	<field name="totalEnLetras" class="java.lang.String">
+		<fieldDescription><![CDATA[Total En Letras]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="248" splitType="Stretch">
+			<textField>
+				<reportElement x="54" y="161" width="274" height="25" uuid="9a1d4c42-570c-41df-9017-61dff2733139"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="54" y="186" width="274" height="25" uuid="17b79cf1-0905-4789-8113-63dfc3238583"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="238" y="198" width="89" height="25" uuid="0fe678ff-0ff3-4e71-aaa2-ef91b1b25d3c"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="183" y="140" width="44" height="20" uuid="6540ffbc-c658-47a3-9eb6-7fb3d0c4f654"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{day}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="238" y="140" width="35" height="20" uuid="cfd2400a-36f8-48a6-8a1d-5bb37cec658a"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="284" y="140" width="44" height="20" uuid="12e3f22b-5ae4-4a30-ac27-3744d85d054f"/>
+				<textElement textAlignment="Right" verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="55" height="24" uuid="ae0aa6c0-3c35-4df0-b59e-7d4e720b332f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="55" y="0" width="194" height="24" uuid="018ab523-a59c-4b38-b473-6ad36e6fb873"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{conceptoVenta}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="249" y="0" width="54" height="24" uuid="26093c1b-ee53-4afd-ac0b-f4b13ad14bcb"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="78" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="249" y="58" width="54" height="20" uuid="a2a2c49d-2dfd-4a7b-8c3a-88fe1b7db840"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

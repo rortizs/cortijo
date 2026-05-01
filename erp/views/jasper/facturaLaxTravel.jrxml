@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facturaLaxTravel" language="groovy" pageWidth="612" pageHeight="396" orientation="Landscape" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5f0b1da-1ae4-4566-aee0-444497221601">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idVenta" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select v.direccion,
+DATE_FORMAT(v.fechaFactura,'%d/%m/%Y') as fecha,v.total,v.nit,v.totalEnLetras,v.nombre,v.correlativo,v.serie,
+v.conceptoVenta,v.cargosXServicio,v.otrosCargosXServicio
+from ventas as v where v.id=$P{idVenta}]]>
+	</queryString>
+	<field name="direccion" class="java.lang.String">
+		<fieldDescription><![CDATA[Direccion]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.lang.String">
+		<fieldDescription><![CDATA[Fecha]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[Total]]></fieldDescription>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<fieldDescription><![CDATA[NIT]]></fieldDescription>
+	</field>
+	<field name="totalEnLetras" class="java.lang.String">
+		<fieldDescription><![CDATA[Total En Letras]]></fieldDescription>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre]]></fieldDescription>
+	</field>
+	<field name="correlativo" class="java.lang.String">
+		<fieldDescription><![CDATA[Correlativo]]></fieldDescription>
+	</field>
+	<field name="serie" class="java.lang.String">
+		<fieldDescription><![CDATA[Serie]]></fieldDescription>
+	</field>
+	<field name="conceptoVenta" class="java.lang.String">
+		<fieldDescription><![CDATA[Concepto de Venta]]></fieldDescription>
+	</field>
+	<field name="cargosXServicio" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="otrosCargosXServicio" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="total_1" class="java.lang.Double" calculation="First">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<variable name="pasajero" class="java.lang.String">
+		<initialValueExpression><![CDATA[""]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="185">
+			<textField>
+				<reportElement x="481" y="25" width="91" height="22" uuid="5d1d5162-7164-4a9e-bd73-2a28f37e375a"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["No.     "+$F{correlativo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="121" width="119" height="17" uuid="53f7186c-78a1-4cab-acb7-35832b35ed67"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="57" y="94" width="211" height="17" uuid="1d172840-a129-40fb-9902-c37d286528cf"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="121" width="59" height="17" uuid="2087c55a-285f-45e4-8704-42701a1b637d"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="94" width="59" height="17" uuid="786d90b8-bc74-483a-8fa6-50de0386a4b2"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="63" width="100" height="20" uuid="bb9b411f-0dd9-49a9-84fb-0a41b22b3883"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{serie}+" "+$F{correlativo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="490" y="0" width="22" height="14" isPrintInFirstWholeBand="true" uuid="493ef267-999a-41d7-9dc3-46383a6ebbb7"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Q.]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="535" y="0" width="37" height="14" uuid="3e0905ef-8955-47a1-94ff-4b5dbb17f314"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cargosXServicio}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="437" height="14" uuid="de624c92-eacb-4640-bc03-3974bd066cfb"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{conceptoVenta}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="98">
+			<textField>
+				<reportElement x="0" y="74" width="375" height="17" isPrintWhenDetailOverflows="true" uuid="c657f1d6-5244-4669-887f-4d67e556d404"/>
+				<textElement markup="none">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalEnLetras}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="24" width="225" height="17" uuid="7578f5e9-8794-4b8a-b0de-71e41b7a3093"/>
+				<textElement>
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[SUJETO A RETENCION DEFINITIVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="490" y="73" width="22" height="20" isPrintInFirstWholeBand="true" uuid="33dc2f07-b9a8-4ebc-afb4-9fe25c4543f3"/>
+				<textElement verticalAlignment="Bottom" markup="none">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Q. ]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="535" y="73" width="36" height="20" uuid="852d9ead-9ec9-49ad-9f6a-ad94c1518c9f"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cargosXServicio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="8" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="miniCarne" language="groovy" pageWidth="288" pageHeight="216" orientation="Landscape" columnWidth="248" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d14cd217-9b59-4a7f-87e8-2e746a850a94">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+    a.nombreC,a.nitC
+FROM
+    clientes as a left join clientes20180621 as b
+    on(a.nitC=b.nitC)
+where
+    a.idClasificacionClientes!=3 and b.id is null
+group by
+    a.nitC]]>
+	</queryString>
+	<field name="nombreC" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre del Cliente,6]]></fieldDescription>
+	</field>
+	<field name="nitC" class="java.lang.String">
+		<fieldDescription><![CDATA[Numero Identificación Tributario,6]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="153">
+			<componentElement>
+				<reportElement x="27" y="53" width="200" height="50" uuid="001af1e8-a248-47e6-9077-21631e562eee"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{nitC}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement x="27" y="83" width="200" height="38" uuid="92784add-0bfa-4ba5-a07d-f791aa380a7e"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nitC}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="27" y="121" width="200" height="20" uuid="8fe05069-bfc2-4112-aad5-e5e9d0221d48"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{nombreC}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

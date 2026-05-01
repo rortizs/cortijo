@@ -1,0 +1,174 @@
+body{
+    overflow: hidden !important;
+}
+
+.loginPage {
+    background-color: #185ca3 !important;
+}
+
+.login {
+    width: 330px !important;
+    height: 365px !important;
+    background-color: #FFF !important;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 2px solid #28B4E9 !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+}
+
+.box {
+    border: 1px solid #CCC;
+    height: 89vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+
+.box2 {
+    background-color: #185ca3 !important;
+    border-radius: 5px !important;
+    text-align: center !important;
+    height: 100px;
+    margin: 2% !important;
+    width: 46% !important;
+    color: #FFF !important;
+    display: table;
+    border: 2px solid #28B4E9 !important;
+    cursor: pointer !important;
+}
+
+.middle-align {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+nav {
+    background-color: #185ca3 !important;
+}
+
+.btns {
+    width: 100% !important;
+    border: 2px solid #FFF !important;
+}
+
+.btns2 {
+    width: 10% !important;
+    height: 100px !important;
+    border: 2px solid #FFF !important;
+    font-size: 2.5em !important;
+}
+
+.imgProducto {
+    width: 200px !important;
+    height: 200px !important;
+    text-align: center !important;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.truncate {
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card {
+    border: 1px solid #28B4E9 !important;
+    cursor: pointer !important;
+}
+
+.card-action {
+    background-color: #185ca3 !important;
+    text-align: center;
+    font-size: 2em !important;
+    font-weight: bold !important;
+    color: #FFF;
+}
+
+.logoNav {
+    width: 110px !important;
+}
+
+.detalleCarrito {
+    overflow-x: scroll !important;
+}
+
+.modal-header {
+    background-color: #185ca3 !important;
+    color: #FFF !important;
+    padding: 10px !important;
+    text-align: center;
+    border-bottom: 2px solid #28B4E9 !important;
+    height: 65px !important;
+}
+
+.blue-text {
+    color: #185ca3 !important;
+}
+
+.blue {
+    background-color: #185ca3 !important;
+}
+
+.resumenCarrito {
+    position: absolute;
+    bottom: 1.5% !important;
+    width: 25% !important;
+    background-color: #185ca3 !important;
+    color: #FFF !important;
+    padding-bottom: 10px !important;
+}
+
+.resumenCarrito ul li {
+    color: #185ca3 !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+}
+
+.detalleCarritos {
+    height: 350px !important;
+    /* background-color: red !important; */
+    overflow-x: auto;
+}
+
+.collection-header {
+    color: #185ca3 !important;
+    text-transform: uppercase !important;
+}
+
+.modal {
+    top: 0 !important;
+}
+
+.modal-content {
+    padding: 5px;
+}
+
+.inputs {
+    font-size: 2.5em !important;
+    color: #000 !important;
+}
+
+.modal-close {
+    position: fixed !important;
+    top: -2px !important;
+    right: 5px !important;
+    font-size: 3em !important;
+}
+
+.btn-existencias {
+    width: 50px !important;
+    position: absolute !important;
+    right: 0% !important;
+    z-index: 1;
+}

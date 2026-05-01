@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consolidadoPedidos" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="78d3e38b-b979-4d1c-a267-2331ebfa15c0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fechaInicio" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFin" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idEmpresas" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    c.sku,
+    c.descLarga,
+    sum(b.cantidad) as unidades,
+    e.descripcion as unidadMedida,
+    d.nombreComercial as empresa
+FROM
+    pedidos AS a
+        INNER JOIN
+    pedidosDetalle as b on(a.id=b.idPedidos)
+        INNER JOIN
+    productos as c on(b.idProductos=c.id)
+        INNER JOIN
+    empresas as d on(a.idEmpresas=d.id)
+        INNER JOIN
+    medidas as e on(c.idMedidas2=e.id)
+where
+    a.created_at between $P{fechaInicio} AND $P{fechaFin} AND a.idEmpresas=$P{idEmpresas} AND a.estado=1
+group by
+    b.idProductos]]>
+	</queryString>
+	<field name="sku" class="java.lang.String">
+		<fieldDescription><![CDATA[Codigo,3]]></fieldDescription>
+	</field>
+	<field name="descLarga" class="java.lang.String">
+		<fieldDescription><![CDATA[Nombre,6]]></fieldDescription>
+	</field>
+	<field name="unidades" class="java.lang.Double"/>
+	<field name="unidadMedida" class="java.lang.String"/>
+	<field name="empresa" class="java.lang.String"/>
+	<variable name="unidades_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{unidades}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="92" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="572" height="20" uuid="85c5d312-5d67-48ef-9b17-799a5a2c6399"/>
+				<textElement textAlignment="Center">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONSOLIDADO DE PRODUCTOS PEDIDOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="71" width="100" height="20" uuid="59c31ab7-9461-4b03-9ebf-a055974056b0"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CODIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="71" width="275" height="20" uuid="753791b4-2c8a-4872-9cf7-2d3e397adf11"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE PRODUCTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="472" y="71" width="100" height="20" uuid="cf191be5-6449-4465-a06a-d7a3af6d025e"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIDADES]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="0" width="572" height="20" uuid="63d65a05-5f35-4ee8-8e49-5765ec4de37a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empresa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="40" width="572" height="20" uuid="b9c3cff5-82cf-429b-8e99-448fd831e7f8"/>
+				<textElement textAlignment="Center" markup="none"/>
+				<textFieldExpression><![CDATA["RANGO DE FECHAS: "+$P{fechaInicio}+" AL "+$P{fechaFin}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="375" y="71" width="97" height="20" uuid="50de9424-3206-4beb-aa53-cec944a08ec8"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MEDIDA]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="5a263e01-9221-49f5-9953-2b060a30e078"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{sku}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="275" height="20" uuid="c60fb8f1-b0c2-4067-b2a2-1aa71b0b005a"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{descLarga}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="472" y="0" width="100" height="20" uuid="e95b6315-f614-4587-8476-2278dd7a0384"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{unidades}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="375" y="0" width="97" height="20" uuid="24e6817d-3cb1-470f-81a4-8d31f40cbed6"/>
+				<box leftPadding="5" rightPadding="5">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{unidadMedida}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="27" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="472" y="1" width="100" height="20" uuid="a8c1b2eb-47fc-4585-aa3a-d3ffb5c9ec2c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{unidades_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="1" width="472" height="20" uuid="fa281f03-04b6-4bf7-96ba-d8b375629a07"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE UNIDADES]]></text>
+			</staticText>
+			<line>
+				<reportElement x="472" y="0" width="100" height="1" uuid="c66b9f2a-cfb5-4650-b071-523e0e3bf7ff"/>
+			</line>
+			<line>
+				<reportElement x="472" y="21" width="100" height="1" uuid="2cead74c-2f90-4aed-b28d-b6a87eb06348"/>
+			</line>
+			<line>
+				<reportElement x="472" y="24" width="100" height="1" uuid="364e2a0d-ebc2-4ae8-9b4e-3dc1047ad417"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
