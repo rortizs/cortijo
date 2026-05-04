@@ -206,6 +206,11 @@ switch ($service) {
         $data = $admin->resumenDocumentosOperados($_SESSION['idEmpresa']);
         echo json_encode($data);
         break;
+    case 'ventasPorMes':
+        $anio = isset($_REQUEST['anio']) ? (int) $_REQUEST['anio'] : (int) date('Y');
+        $data = $admin->ventasPorMes($_SESSION['idEmpresa'], $anio);
+        echo json_encode($data);
+        break;
     case 'getDteSaldo':
         $data = $admin->getDteSaldo($_SESSION['idEmpresa']);
         echo json_encode($data);

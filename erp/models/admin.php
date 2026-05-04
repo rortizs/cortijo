@@ -923,10 +923,10 @@ class Admin extends General {
                 union all
                 SELECT 'facturacion' as documento, COUNT(*) as documentosOperados
                     FROM ventas
-                    WHERE (fechaFactura BETWEEN '2022-01-01 00:00:00' AND CONCAT(CURDATE(), ' 23:59:59'))
+                    WHERE YEAR(fechaFactura) = YEAR(CURDATE())
                     AND tipoTransaccion = 1
                     AND idEmpresas = " . $idEmpresa . "
-                    AND autorizacionFEL is not null
+                    AND autorizacionFEL IS NOT NULL
                 union all
                 select 'compras' as documento ,count(*) as documentosOperados from compras where date(created_at)=curdate() and idEmpresas=" . $idEmpresa . "
                 union all
@@ -934,11 +934,34 @@ class Admin extends General {
                 union all
                 select 'totalPedidos' as documento ,sum(total) as documentosOperados from pedidos where date(created_at)=curdate() and idEmpresas=" . $idEmpresa . "
                 union all
-                SELECT 'totalFacturado' as documento, SUM(total) as documentosOperados FROM ventas WHERE (fechaFactura BETWEEN '2022-01-01 00:00:00' AND '2022-12-31 23:59:59')AND tipoTransaccion = 1 and idEmpresas=" . $idEmpresa . "
+                SELECT 'totalFacturado' as documento, SUM(total) as documentosOperados FROM ventas WHERE YEAR(fechaFactura) = YEAR(CURDATE()) AND tipoTransaccion = 1 AND autorizacionFEL IS NOT NULL AND idEmpresas=" . $idEmpresa . "
                 union all
-                SELECT 'facturaciones' as documento, COUNT(id) as documentosOperados FROM ventas WHERE (fechaFactura BETWEEN '2022-01-01 00:00:00' AND '2023-12-31 23:59:59') AND tipoTransaccion = 1 and idEmpresas=" . $idEmpresa . "
+                SELECT 'facturaciones' as documento, COUNT(id) as documentosOperados FROM ventas WHERE YEAR(fechaFactura) = YEAR(CURDATE()) AND tipoTransaccion = 1 AND autorizacionFEL IS NOT NULL AND idEmpresas=" . $idEmpresa . "
                 union all
                 select 'totalCompras' as documento ,sum(total) as documentosOperados from compras where date(created_at)=curdate() and idEmpresas=" . $idEmpresa . ";";
+		$query = mysql_query($sql, dbCon::conPrincipal());
+		while ($reg = mysql_fetch_assoc($query)) {
+			$this->resultado[] = $reg;
+		}
+		return $this->resultado;
+	}
+
+	/**
+	 * Ventas por mes para un año dado (para gráfica de barras del dashboard)
+	 */
+	public function ventasPorMes($idEmpresa, $anio) {
+		$anio = (int) $anio;
+		$this->resultado = null;
+		$sql = "SELECT
+                    MONTH(fechaFactura) AS mes,
+                    SUM(total) AS totalVentas
+                FROM ventas
+                WHERE YEAR(fechaFactura) = " . $anio . "
+                    AND tipoTransaccion = 1
+                    AND autorizacionFEL IS NOT NULL
+                    AND idEmpresas = " . (int) $idEmpresa . "
+                GROUP BY MONTH(fechaFactura)
+                ORDER BY MONTH(fechaFactura)";
 		$query = mysql_query($sql, dbCon::conPrincipal());
 		while ($reg = mysql_fetch_assoc($query)) {
 			$this->resultado[] = $reg;

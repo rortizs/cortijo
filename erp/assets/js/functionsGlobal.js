@@ -34,6 +34,7 @@ $(document).ready(function () {
     }
   });
   resumenDocumentosOperados();
+  ventasPorMes();
   if (dbProject === "erp_suplegt" || dbProject === "erp_suple") {
     $(".depositosDetalle").show();
     //
@@ -1839,4 +1840,75 @@ function resumenInventario() {
       );
     }
   });
+}
+
+// ============================================================
+// VENTAS POR MES - Gráfica de barras con selector de año
+// ============================================================
+function ventasPorMes() {
+  var anio = $("#ventasMesAnio").val() || new Date().getFullYear();
+  $("#ventasMesTitulo").text("Año " + anio);
+
+  var params = {
+    service: "ventasPorMes",
+    anio: anio,
+  };
+
+  $.post(
+    "controllers/adminController.php",
+    params,
+    function (data) {
+      var meses = [
+        "", "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+        "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
+      ];
+
+      // Construir array de datos para Google Charts
+      var chartData = [["Mes", "Total Ventas", { role: "annotation" }]];
+      var totalesPorMes = {};
+
+      if (data && data.length > 0) {
+        $.each(data, function (key, val) {
+          totalesPorMes[parseInt(val.mes)] = parseFloat(val.totalVentas);
+        });
+      }
+
+      // Asegurarse de incluir los 12 meses (con 0 si no hay ventas)
+      for (var m = 1; m <= 12; m++) {
+        var total = totalesPorMes[m] || 0;
+        chartData.push([
+          meses[m],
+          total,
+          total > 0 ? accounting.formatNumber(total, 2) : ""
+        ]);
+      }
+
+      google.charts.load("current", { packages: ["corechart"] });
+      google.charts.setOnLoadCallback(function () {
+        var dataTable = google.visualization.arrayToDataTable(chartData);
+        var options = {
+          title: "",
+          width: "100%",
+          height: 320,
+          bar: { groupWidth: "60%" },
+          legend: { position: "none" },
+          colors: ["#7B68EE"],
+          hAxis: { title: "Mes" },
+          vAxis: {
+            title: "Total Ventas (Q)",
+            format: "#,##0.00"
+          },
+          annotations: {
+            alwaysOutside: false,
+            textStyle: { fontSize: 10, color: "#333" }
+          }
+        };
+        var chart = new google.visualization.ColumnChart(
+          document.getElementById("chart_ventas_mes")
+        );
+        chart.draw(dataTable, options);
+      });
+    },
+    "json"
+  );
 }
