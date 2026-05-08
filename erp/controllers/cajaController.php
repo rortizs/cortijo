@@ -44,7 +44,6 @@ switch ($service) {
         $_REQUEST['idUsuarios'] = $_SESSION['idUsuarios'];
         $_REQUEST['idSucursales'] = $_SESSION['idSucursalesS'] ?: $_REQUEST['idSucursales'];
         $_REQUEST['idEmpresas'] = $_SESSION['idEmpresa'] ?: $_SESSION['idEmpresas'];
-        print_r($_REQUEST);
         $process = $caja->agregarProductoVenta($_REQUEST);
         echo json_encode($process);
         break;
