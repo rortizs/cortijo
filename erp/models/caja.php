@@ -1645,6 +1645,32 @@ class Caja extends General
 	/** METODO GET CIERRE CAJA
 	 *
 	 */
+	/**
+	 * Resumen de ventas pendientes de cierre para un cajero/sucursal
+	 */
+	public function getCierre($idSucursales, $idUsuarios)
+	{
+		$sql = "SELECT
+                    IFNULL(SUM(total), 0) as ventas,
+                    IFNULL(SUM(CASE WHEN idFormasPago = 1 THEN total ELSE 0 END), 0) as efectivo,
+                    IFNULL(SUM(CASE WHEN idFormasPago = 2 THEN total ELSE 0 END), 0) as cambios,
+                    IFNULL(SUM(CASE WHEN idFormasPago = 5 THEN total ELSE 0 END), 0) as tarjetas
+                FROM ventas
+                WHERE idSucursales = " . $idSucursales . "
+                  AND idUsuarios = " . $idUsuarios . "
+                  AND statusCierre = '0'
+                  AND anulacion = '0';";
+		$query = mysql_query($sql, dbCon::conPrincipal());
+		$response = array();
+		if ($query) {
+			$row = mysql_fetch_assoc($query);
+			if ($row) {
+				$response[] = $row;
+			}
+		}
+		return $response;
+	}
+
 	public function getTotalVentas($idSucursales, $idUsuarios, $fechaCorte)
 	{
 		$this->resultado = null;
