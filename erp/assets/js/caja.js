@@ -15,6 +15,24 @@ var abono = 0;
 var facturas = null;
 var idCotizaciones = null;
 //
+function recalcularTotalCorte() {
+    var efectivo   = accounting.unformat($("#totalEfectivo").val()) || 0;
+    var dolares    = accounting.unformat($("#totalEfectivoDolares").val()) || 0;
+    var tj         = accounting.unformat($("#totalesTJ").val()) || 0;
+    var exenciones = accounting.unformat($("#totalExencion").val()) || 0;
+    var cheques    = accounting.unformat($("#totalCheques").val()) || 0;
+    var recibos    = accounting.unformat($("#totalRecibos").val()) || 0;
+    var vales      = accounting.unformat($("#valesCorte").val()) || 0;
+    var fondo      = fondoCorte || 0;
+    var total      = efectivo + dolares + tj + exenciones + cheques + recibos - vales - fondo;
+    $("#totalCorte").val(accounting.formatNumber(total, 2));
+}
+function recalcularDiferencia() {
+    var ventasContado = accounting.unformat($("#totalVentasContado").val()) || 0;
+    var corte         = accounting.unformat($("#totalCorte").val()) || 0;
+    $("#diferencia").val(accounting.formatNumber(ventasContado - corte, 2));
+}
+//
 $(document).on("keypress", ".facturacion", function (e) {
     if (e.keyCode == 13 || event.keyCode == 9) {
         var nextElement = $('[tabindex="' + (this.tabIndex + 1) + '"]');
@@ -2001,10 +2019,8 @@ function openCorteCaja() {
                     }
                 });
                 //
-                $("#totalCorte").val(parseFloat(parseFloat($("#totalEfectivoDolares").val()) + parseFloat($("#totalEfectivo").val()) + parseFloat($("#totalesTJ").val()) - parseFloat($("#valesCorte").val()) - fondoCorte).toFixed(2));
-                //$("#totalCorte").val(parseFloat(parseFloat($("#totalEfectivoDolares").val()) + parseFloat($("#valesCorte").val()) + parseFloat($("#totalEfectivo").val()) + parseFloat($("#totalesTJ").val()) - fondoCorte).toFixed(2));
-                //$("#diferencia").val(parseFloat($("#totalVentasContado").val() - $("#totalCorte").val()).toFixed(2));
-                $("#diferencia").val(accounting.unformat($("#totalVentasContado").val()) - accounting.unformat($("#totalCorte").val()));
+                recalcularTotalCorte();
+                recalcularDiferencia();
             }
         });
         //
@@ -2020,8 +2036,8 @@ function openCorteCaja() {
                     totalTJ += accounting.unformat($(this).val() === '' ? '0' : $(this).val());
                     $("#totalesTJ").val(accounting.formatNumber(totalTJ, 2));
                 });
-                $("#totalCorte").val(accounting.formatNumber(accounting.unformat($("#valesCorte").val()) + accounting.unformat($("#totalEfectivo").val()) + accounting.unformat($("#totalesTJ").val()) - fondoCorte), 2);
-                $("#diferencia").val(accounting.formatNumber(accounting.unformat($("#totalVentasContado").val()) - accounting.unformat($("#totalCorte").val())), 2);
+                recalcularTotalCorte();
+                recalcularDiferencia();
             }
         });
         //
@@ -2100,18 +2116,14 @@ function getTotalVentaExencion() {
     };
     $.post('controllers/cajaController.php', params, function (data) {
         var total = 0;
-        var t = 0;
-        var diferencia = 0;
         if (data !== null) {
             $.each(data, function (key, val) {
-                total = accounting.unformat(val.total === null ? '0' : val.total);
-                t = total + accounting.unformat($("#totalCorte").val());
-                diferencia = accounting.unformat($("#totalVentasContado").val()) - accounting.unformat($("#totalCorte").val());
+                total = (accounting.unformat(val.total) || 0);
             });
         }
         $("#totalExencion").val(accounting.formatNumber(total, 2));
-        $("#totalCorte").val(accounting.formatNumber(t, 2));
-        $("#diferencia").val(accounting.formatNumber(diferencia, 2));
+        recalcularTotalCorte();
+        recalcularDiferencia();
     }, 'json').done(function () {
         getTotalVentaCheques();
     });
@@ -2124,18 +2136,14 @@ function getTotalVentaCheques() {
     };
     $.post('controllers/cajaController.php', params, function (data) {
         var total = 0;
-        var t = 0;
-        var diferencia = 0;
         if (data !== null) {
             $.each(data, function (key, val) {
-                total = accounting.unformat(val.total === null ? '0' : val.total);
-                t = total + accounting.unformat($("#totalCorte").val());
-                diferencia = accounting.unformat($("#totalVentasContado").val()) - accounting.unformat($("#totalCorte").val());
+                total = (accounting.unformat(val.total) || 0);
             });
         }
         $("#totalCheques").val(accounting.formatNumber(total, 2));
-        $("#totalCorte").val(accounting.formatNumber(t, 2));
-        $("#diferencia").val(accounting.formatNumber(diferencia, 2));
+        recalcularTotalCorte();
+        recalcularDiferencia();
     }, 'json').done(function(){
     	getTotalRecibos();
     });
@@ -2148,18 +2156,14 @@ function getTotalRecibos(){
     };
     $.post('controllers/cajaController.php', params, function (data) {
         var total = 0;
-        var t = 0;
-        var diferencia = 0;
         if (data !== null) {
             $.each(data, function (key, val) {
-                total = accounting.unformat(val.total === null ? '0' : val.total);
-                t = total + accounting.unformat($("#totalCorte").val());
-                diferencia = accounting.unformat($("#totalVentasContado").val()) - accounting.unformat($("#totalCorte").val());
+                total = (accounting.unformat(val.total) || 0);
             });
         }
         $("#totalRecibos").val(accounting.formatNumber(total, 2));
-        $("#totalCorte").val(accounting.formatNumber(t, 2));
-        $("#diferencia").val(accounting.formatNumber(diferencia, 2));
+        recalcularTotalCorte();
+        recalcularDiferencia();
     }, 'json');
 }
 //
