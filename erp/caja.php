@@ -7,7 +7,7 @@ session_start();
 $release_version = date('Y.m.d.H.i.s');
 
 require_once("models/config.php");
-if ($_SESSION['userName'] != '') {
+if (!empty($_SESSION['userName']) && !empty($_SESSION['idRoles'])) {
     $_SESSION['nombreEmpresa'] = $_SESSION['companyName'];
     $_SESSION['idEmpresa'] = $_SESSION['idEmpresas'];
     ?>

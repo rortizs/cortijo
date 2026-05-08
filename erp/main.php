@@ -8,7 +8,7 @@
  */
 session_start();
 $release_version = date('Y.m.d.H.i.s');
-if ($_SESSION['userName'] != '') {
+if (!empty($_SESSION['userName']) && !empty($_SESSION['idRoles'])) {
     $_SESSION['nombreEmpresa'] = $_POST['nombreEmpresa'] ?: $_SESSION['nombreEmpresa'];
     $_SESSION['idEmpresa'] = $_POST['idEmpresa'] ?: $_SESSION['idEmpresa'];
     require_once "models/config.php";

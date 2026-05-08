@@ -6,7 +6,7 @@
  */
 session_start();
 $release_version = date('Y.m.d.H.i.s');
-if ($_SESSION['userName'] != '') {
+if (!empty($_SESSION['userName']) && !empty($_SESSION['idRoles'])) {
     require_once ("models/config.php");
     require_once ("models/login.php");
     $login = new Login();
