@@ -1313,7 +1313,7 @@ class Caja extends General
 					//
 					$sql2 = "update ventasDetalle set precio='0.00', costo='0.00', total='0.00', totalCosto='0.00'
                              where idVentas=" . $params['idFactura'] . ";";
-					$query2 = mysql_query($sql1, dbCon::conPrincipal());
+					$query2 = mysql_query($sql2, dbCon::conPrincipal());
 					if ($query2 == true) {
 						//paso 2 ingresar los productos al inventario
 						$this->movimientoInventario($params['idFactura'], 'INGRESO POR ANULACION DE FAC ' . $regF['serie'] . '-' . $regF['correlativo'], 'ingreso', $this->timestamp);
@@ -1352,7 +1352,7 @@ class Caja extends General
 			if ($query1 == true) {
 				$sql2 = "update ventasDetalle set precio='0.00', costo='0.00', total='0.00', totalCosto='0.00'
                          where idVentas=" . $params['idFactura'] . ";";
-				$query2 = mysql_query($sql1, dbCon::conPrincipal());
+				$query2 = mysql_query($sql2, dbCon::conPrincipal());
 				if ($query2 == true) {
 					//paso 2 ingresar los productos al inventario
 					$this->movimientoInventario($params['idFactura'], 'INGRESO POR ANULACION DE FAC ' . $regF['serie'] . '-' . $regF['correlativo'], 'ingreso', $this->timestamp);
