@@ -182,7 +182,8 @@ switch ($service) {
         $response = "";
         $idUsuarios = $_SESSION['idUsuarios'];
         $idSucursales = $_SESSION['idSucursalesS'];
-        $getCorte = $caja->getCorte($idUsuarios, $idSucursales);
+        $idCorte = isset($_REQUEST['idCorte']) ? (int)$_REQUEST['idCorte'] : 0;
+        $getCorte = $caja->getCorte($idCorte);
         $getCierre = $caja->getCierre($idSucursales, $idUsuarios);
         $response[] = array(
             'fechaVenta' => $getCorte['created_at'] ?: '',
