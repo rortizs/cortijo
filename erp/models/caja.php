@@ -1707,11 +1707,11 @@ class Caja extends General
                     ventas as b ON (a.idVentas = b.id)
                 where
                     a.idFormasPago = 5
-                    and date(created_at) = '" . date("Y-m-d", strtotime($fechaCorte)) . "'
-                    and idSucursales = " . $idSucursales . "
-                    and statusCierre = 0
-                    and anulacion = 0
-                    and idUsuarios = " . $idUsuarios . " group by idEmisores;";
+                    and b.fechaFactura = '" . date("Y-m-d", strtotime($fechaCorte)) . "'
+                    and b.idSucursales = " . $idSucursales . "
+                    and b.statusCierre = 0
+                    and b.anulacion = 0
+                    and b.idUsuarios = " . $idUsuarios . " group by idEmisores;";
 		//echo $sql . '\n';
 		$query = mysql_query($sql, dbCon::conPrincipal());
 		while ($reg = mysql_fetch_assoc($query)) {
@@ -1734,11 +1734,11 @@ class Caja extends General
                     ventas as b ON (a.idVentas = b.id)
                 where
                     a.idFormasPago = 3
-                    and date(created_at) = '" . date("Y-m-d", strtotime($fechaCorte)) . "'
-                    and idSucursales = " . $idSucursales . "
-                    and statusCierre = 0
-                    and anulacion = 0
-                    and idUsuarios = " . $idUsuarios . ";";
+                    and b.fechaFactura = '" . date("Y-m-d", strtotime($fechaCorte)) . "'
+                    and b.idSucursales = " . $idSucursales . "
+                    and b.statusCierre = 0
+                    and b.anulacion = 0
+                    and b.idUsuarios = " . $idUsuarios . ";";
 		//echo $sql . '\n';
 		$query = mysql_query($sql, dbCon::conPrincipal());
 		while ($reg = mysql_fetch_assoc($query)) {
@@ -1761,11 +1761,11 @@ class Caja extends General
                     ventas as b ON (a.idVentas = b.id)
                 where
                     a.idFormasPago = 4
-                    and date(created_at) = '" . date("Y-m-d", strtotime($fechaCorte)) . "'
-                    and idSucursales = " . $idSucursales . "
-                    and statusCierre = 0
-                    and anulacion = 0
-                    and idUsuarios = " . $idUsuarios . ";";
+                    and b.fechaFactura = '" . date("Y-m-d", strtotime($fechaCorte)) . "'
+                    and b.idSucursales = " . $idSucursales . "
+                    and b.statusCierre = 0
+                    and b.anulacion = 0
+                    and b.idUsuarios = " . $idUsuarios . ";";
 		//echo $sql . '\n';
 		$query = mysql_query($sql, dbCon::conPrincipal());
 		while ($reg = mysql_fetch_assoc($query)) {
