@@ -6,6 +6,11 @@
  */
 session_start();
 date_default_timezone_set("America/Guatemala");
+// Security guard — bloquear acceso sin sesión activa
+if (empty($_SESSION['userName']) || empty($_SESSION['idRoles'])) {
+    http_response_code(403);
+    die(json_encode(array('error' => 'unauthorized')));
+}
 require_once("../models/admin.php");
 require_once("../models/dynamic.php");
 $admin = new Admin();
