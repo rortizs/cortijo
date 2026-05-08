@@ -201,6 +201,7 @@ switch ($service) {
     case 'procesarCierre':
         $idUsuarios = $_SESSION['idUsuarios'];
         $idSucursales = $_SESSION['idSucursalesS'];
+        $fechaCorte = isset($_REQUEST['fechaCorte']) ? $_REQUEST['fechaCorte'] : date("Y-m-d");
         $fechaCierre = date("Y-m-d", strtotime($fechaCorte));
         $process = $caja->cerrarCaja($idUsuarios, $idSucursales, $fechaCierre);
         echo json_encode($process);
