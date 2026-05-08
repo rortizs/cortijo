@@ -1821,7 +1821,7 @@ class Caja extends General
 		$sql = "update fondoCaja set date_cierre='" . $this->timestamp . "' where idUsuarios=" . $idUsuarios . " and idSucursales=" . $idSucursales . " and date(date_apertura)='" . $fechaCierre . "';";
 		$query = mysql_query($sql, dbCon::conPrincipal());
 		if ($query == true) {
-			$sql2 = "update ventas set statusCierre='1' where idUsuarios=" . $idUsuarios . " and idSucursales=" . $idSucursales . " and date(created_at)='" . $fechaCierre . "' and statusCierre='0';";
+			$sql2 = "update ventas set statusCierre='1' where idUsuarios=" . $idUsuarios . " and idSucursales=" . $idSucursales . " and fechaFactura='" . $fechaCierre . "' and statusCierre='0';";
 			$query2 = mysql_query($sql2, dbCon::conPrincipal());
 			if ($query2 == true) {
 				$sql3 = "update corteCaja set statusCierre='1' where idUsuarios=" . $idUsuarios . " and idSucursales=" . $idSucursales . " and date(created_at)='" . $fechaCierre . "' and statusCierre='0';";
