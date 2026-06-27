@@ -1942,10 +1942,10 @@ class Reportes extends General
 				$filter = "and DATE(fechaFactura) = DATE_ADD(CURDATE(), INTERVAL -1 DAY)";
 				break;
 			case 'MesHoy':
-				$filter = "and fechaFactura between concat(year(curdate()),'-',month(curdate()),'-01') and concat(year(curdate()),'-',month(curdate()),'-',day(curdate()))";
+				$filter = "and fechaFactura >= DATE_FORMAT(CURDATE(), '%Y-%m-01') and fechaFactura < DATE_ADD(CURDATE(), INTERVAL 1 DAY)";
 				break;
 			case 'MesAyer':
-				$filter = "and fechaFactura between concat(year(curdate()),'-',month(curdate())-1,'-01') and concat(year(curdate()),'-',month(curdate())-1,'-',day(curdate()))";
+				$filter = "and fechaFactura >= DATE_SUB(DATE_FORMAT(CURDATE(), '%Y-%m-01'), INTERVAL 1 MONTH) and fechaFactura < DATE_SUB(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 1 MONTH)";
 				break;
 			case 'UltimaTransaccion':
 				$filter = "and DATE(fechaFactura) = CURDATE() order by id desc limit 1";
@@ -1961,7 +1961,6 @@ class Reportes extends General
             ventas
         WHERE
             idEmpresas = " . $params['idEmpresas'] . " " . $filter . ";";
-		echo $sql . "<br/>";
 		$query = mysql_query($sql, dbCon::conDynamic($_SESSION['dbProject']));
 		while ($reg = mysql_fetch_assoc($query)) {
 			$this->resultado[] = $reg;
@@ -2225,19 +2224,19 @@ class Reportes extends General
 		$filter = "";
 		switch ($params['option']) {
 			case 'Hoy':
-				$filter = "and fechaFactura = CURDATE()";
+				$filter = "and DATE(fechaFactura) = CURDATE()";
 				break;
 			case 'Ayer':
-				$filter = "and fechaFactura=DATE_ADD(CURDATE(), INTERVAL -1 DAY)";
+				$filter = "and DATE(fechaFactura) = DATE_ADD(CURDATE(), INTERVAL -1 DAY)";
 				break;
 			case 'MesHoy':
-				$filter = "and fechaFactura between concat(year(curdate()),'-',month(curdate()),'-01') and concat(year(curdate()),'-',month(curdate()),'-',day(curdate()))";
+				$filter = "and fechaFactura >= DATE_FORMAT(CURDATE(), '%Y-%m-01') and fechaFactura < DATE_ADD(CURDATE(), INTERVAL 1 DAY)";
 				break;
 			case 'MesAyer':
-				$filter = "and fechaFactura between concat(year(curdate()),'-',month(curdate())-1,'-01') and concat(year(curdate()),'-',month(curdate())-1,'-',day(curdate()))";
+				$filter = "and fechaFactura >= DATE_SUB(DATE_FORMAT(CURDATE(), '%Y-%m-01'), INTERVAL 1 MONTH) and fechaFactura < DATE_SUB(DATE_ADD(CURDATE(), INTERVAL 1 DAY), INTERVAL 1 MONTH)";
 				break;
 			case 'UltimaTransaccion':
-				$filter = "and fechaFactura = CURDATE() order by id desc limit 1";
+				$filter = "and DATE(fechaFactura) = CURDATE() order by id desc limit 1";
 				break;
 		}
 		$sql = "SELECT
