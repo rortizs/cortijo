@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cotizaciones" language="groovy" pageWidth="612" pageHeight="792" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="bc74d372-c3b1-4c55-9b12-b5a757c100cd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -114,49 +113,49 @@ GROUP BY b.idProductos, b.descLarga]]>
 	<title>
 		<band height="133" splitType="Stretch">
 			<textField>
-				<reportElement x="37" y="72" width="252" height="20" uuid="04c064a3-de3d-4b26-8bfa-87cefcc1c67f"/>
-				<textElement>
+				<reportElement x="174" y="35" width="252" height="20" uuid="04c064a3-de3d-4b26-8bfa-87cefcc1c67f"/>
+				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{razonSocial}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="37" y="52" width="252" height="20" uuid="82066b04-2dba-4808-bce5-3ad285d2c9a0"/>
+				<reportElement x="10" y="15" width="592" height="20" uuid="82066b04-2dba-4808-bce5-3ad285d2c9a0"/>
 				<textElement textAlignment="Center">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[FERRETERIA EL CORTIJO]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="37" y="92" width="252" height="20" uuid="82d48aef-eae4-400c-91d4-b4e844f849fa"/>
-				<textElement>
+				<reportElement x="174" y="60" width="252" height="20" uuid="82d48aef-eae4-400c-91d4-b4e844f849fa"/>
+				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{direccionEmpresa}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="37" y="112" width="252" height="20" uuid="760444f1-31b5-4790-8422-eece25448536"/>
-				<textElement>
+				<reportElement x="174" y="80" width="252" height="20" uuid="760444f1-31b5-4790-8422-eece25448536"/>
+				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["PBX: "+$F{telefonoEmpresa}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="384" y="15" width="86" height="20" uuid="82066b04-2dba-4808-bce5-3ad285d2c9a0"/>
+				<reportElement x="434" y="40" width="86" height="20" uuid="82066b04-2dba-4808-bce5-3ad285d2c9a0"/>
 				<textElement textAlignment="Right">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[COTIZACION NO:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="470" y="15" width="70" height="20" uuid="9d3d54b0-6024-4014-86c6-7a8bfbd4be14"/>
+				<reportElement x="520" y="40" width="70" height="20" uuid="9d3d54b0-6024-4014-86c6-7a8bfbd4be14"/>
 				<textElement textAlignment="Right">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{documento}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="37" y="14" width="50" height="58" uuid="290a631f-c0a4-48a1-90ec-f296b6728bf1"/>
+			<image onErrorType="Blank">
+				<reportElement x="37" y="14" width="100" height="96" uuid="290a631f-c0a4-48a1-90ec-f296b6728bf1"/>
 				<imageExpression><![CDATA["./logos/elcortijo.jpg"]]></imageExpression>
 			</image>
 		</band>
@@ -332,14 +331,14 @@ GROUP BY b.idProductos, b.descLarga]]>
 	</columnHeader>
 	<detail>
 		<band height="21" splitType="Stretch">
-			<textField textAdjust="StretchHeight">
+			<textField isStretchWithOverflow="true">
 				<reportElement x="37" y="0" width="77" height="20" uuid="33dce5ee-ddb8-4cd1-9e50-e856bf7b890d"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sku}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
+			<textField isStretchWithOverflow="true">
 				<reportElement x="114" y="0" width="262" height="20" uuid="3d34b470-0eec-4d6e-9e2d-3bfe28fb15d8"/>
 				<textElement>
 					<font size="8"/>
@@ -347,21 +346,21 @@ GROUP BY b.idProductos, b.descLarga]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{descLarga}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,##0">
+			<textField isStretchWithOverflow="true" pattern="#,##0">
 				<reportElement x="376" y="0" width="50" height="20" uuid="fa08d091-0a9e-48e9-9b93-52029e6edc89"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,##0.00">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
 				<reportElement x="426" y="0" width="60" height="20" uuid="303b076a-0beb-4fe0-9389-621c3504c837"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,##0.00">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
 				<reportElement x="486" y="1" width="54" height="20" uuid="5803fdeb-6dc2-4b33-b6db-75504ea5d24d"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
@@ -386,7 +385,7 @@ GROUP BY b.idProductos, b.descLarga]]>
 				</textElement>
 				<text><![CDATA[OBSERVACIONES:]]></text>
 			</staticText>
-			<textField textAdjust="StretchHeight">
+			<textField isStretchWithOverflow="true">
 				<reportElement x="137" y="19" width="403" height="21" uuid="94a39140-60ce-4621-b49f-506e3a9c8613"/>
 				<textElement>
 					<font size="8"/>
@@ -400,13 +399,7 @@ GROUP BY b.idProductos, b.descLarga]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vendedor}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="250" y="1" width="203" height="20" uuid="62e34063-dc22-4be6-afb4-de854dc88413"/>
-				<textElement>
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Esta cotización tiene validez por 5 días habiles y se cuente con la existencia de los productos cotizados.]]></text>
-			</staticText>
+			
 		</band>
 	</pageFooter>
 	<summary>

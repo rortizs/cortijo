@@ -64,7 +64,7 @@ body{
 }
 .empresas {
     width: 75% !important;
-    height: 400px !important;
+    height: 480px !important;
     background-color: #FFF !important;
     position: absolute;
     top:0;
@@ -79,7 +79,7 @@ body{
     padding: 2% !important;
 }
 .logoCubix{
-    padding: 10% !important;
+    padding: -10px !important;
 }
 .listadoEmpresas h1{
     color: #1A3973 !important;

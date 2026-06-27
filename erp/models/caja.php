@@ -3461,54 +3461,226 @@ class Caja extends General
 
 	public function consultaNit($params)
 	{
-		$responseF = [];
-		$URL = "https://www.ingface.net/ServiciosIngface/ingfaceWsServices";
-		$xml_data = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://services.ws.ingface.com/">
-                    <soapenv:Header/>
-                    <soapenv:Body>
-                       <ser:nitContribuyentes>
-                          <!--Optional:-->
-                          <usuario>CONSUMO_NIT</usuario>
-                          <!--Optional:-->
-                          <clave>58B45D8740C791420C53A49FFC924A1B58B45D8740C791420C53A49FFC924A1B</clave>
-                          <nit>' . $params['nit'] . '</nit>
-                       </ser:nitContribuyentes>
-                    </soapenv:Body>';
-		$ch = curl_init($URL);
-		curl_setopt($ch, CURLOPT_MUTE, 1);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		$documento = strtoupper(trim(str_replace('-', '', $params['nit'])));
+
+		if ($documento === '' || $documento === 'CF' || $documento === 'C/F') {
+			return array(array('message' => 'success', 'nombre' => 'Consumidor Final', 'direccion' => 'CIUDAD'));
+		}
+
+		// SAT permite facturar con NIT o CUI/DPI. INFILE separa ambos servicios:
+		// - NIT: consulta receptores.
+		// - CUI/DPI: login JWT + consulta CUI.
+		// Se conserva el contrato JSON que ya consume caja.js/functionsGlobal.js.
+		if (preg_match('/^[0-9]{13}$/', $documento)) {
+			return $this->consultaCuiInfile($documento, $params);
+		}
+
+		return $this->consultaNitInfile($documento, $params);
+	}
+
+	private function consultaNitInfile($nit, $params)
+	{
+		$credenciales = array('usuarioAPI' => '', 'llaveAPI' => '');
+		if (isset($params['idEmpresas']) && $params['idEmpresas'] != '') {
+			$credenciales = $this->getCredencialesInfile($params['idEmpresas']);
+		}
+
+		$URL = "https://consultareceptores.feel.com.gt/rest/action";
+		// Manual INFILE "Consumo Web Service consulta de NIT" (2021):
+		// el servicio espera JSON raw con emisor_codigo, emisor_clave y nit_consulta.
+		// OJO: no es el mismo formato que certificación FEL ni que consulta CUI.
+		$payload = json_encode(array(
+			'emisor_codigo' => $credenciales['usuarioAPI'],
+			'emisor_clave' => $credenciales['llaveAPI'],
+			'nit_consulta' => $nit
+		));
+		$response = $this->postJsonInfile($URL, $payload, array('Content-Type: application/json'));
+
+		if ($response['error'] != '') {
+			error_log('consultaNitInfile() - Error CURL: ' . $response['error']);
+			return array(array('message' => 'error', 'msj' => 'No fue posible consultar el NIT en INFILE'));
+		}
+
+		$data = json_decode($response['body'], true);
+		if (is_array($data)) {
+			$nombre = isset($data['nombre']) ? trim($data['nombre']) : (isset($data['Nombre']) ? trim($data['Nombre']) : '');
+			$mensaje = isset($data['mensaje']) ? trim($data['mensaje']) : (isset($data['Mensaje']) ? trim($data['Mensaje']) : '');
+
+			if ($nombre != '') {
+				return array(array('message' => 'success', 'nombre' => $nombre, 'direccion' => 'CIUDAD'));
+			}
+
+			return array(array('message' => 'error', 'msj' => $mensaje != '' ? $mensaje : 'NIT no encontrado en INFILE'));
+		}
+
+		// Respaldo por si INFILE responde XML en alguna cuenta/ambiente.
+		return $this->parseNitInfileXml($response['body']);
+	}
+
+	private function consultaCuiInfile($cui, $params)
+	{
+		if (!isset($params['idEmpresas']) || $params['idEmpresas'] == '') {
+			return array(array('message' => 'error', 'msj' => 'No se pudo identificar la empresa para consultar CUI'));
+		}
+
+		$credenciales = $this->getCredencialesInfile($params['idEmpresas']);
+		if ($credenciales['usuarioAPI'] == '' || $credenciales['llaveAPI'] == '') {
+			return array(array('message' => 'error', 'msj' => 'Credenciales INFILE incompletas para consultar CUI'));
+		}
+
+		$token = $this->getTokenCuiInfile($params['idEmpresas'], $credenciales);
+		if ($token == '') {
+			return array(array('message' => 'error', 'msj' => 'No fue posible autenticar la consulta de CUI en INFILE'));
+		}
+
+		$ch = curl_init('https://certificador.feel.com.gt/api/v2/servicios/externos/cui');
 		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
-		curl_setopt($ch, CURLOPT_POSTFIELDS, "$xml_data");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, array('cui' => $cui));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $token));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 		$output = curl_exec($ch);
+		$error = curl_error($ch);
 		curl_close($ch);
 
-		//valido si no es XML (por ejemplo error 502)
-		if (strpos(trim($output), '<') !== 0) {
-			error_log("consultaNit() - Respuesta no valida del servidor: " . var_export($output, true));
-			return [['message' => 'error', 'msj' => 'Respuesta no valida de la SAT', 'direccion' => 'CIUDAD']];
+		if ($error != '') {
+			error_log('consultaCuiInfile() - Error CURL: ' . $error);
+			return array(array('message' => 'error', 'msj' => 'No fue posible consultar el CUI en INFILE'));
 		}
-		//echo $output;
-		//echo'\n';
-		//CONTINUA PARSEANDO XML SI ES VALIDO
-		try {
-			$response = preg_replace("/(<\/?)(\w+):([^>]*>)/", "$1$2$3", $output);
-			$xml = new SimpleXMLElement($response);
-			$body = $xml->xpath('//SBody')[0];
-			$array = json_decode(json_encode((array) $body), TRUE);
 
-			if ($array['ns2nitContribuyentesResponse']['return']['nombre'] === 'Nit no valido') {
-				$responseF[] = array('message' => 'error', 'msj' => $array['ns2nitContribuyentesResponse']['return']['nombre']);
-			} else {
-				$responseF[] = array('message' => 'success', 'nombre' => $array['ns2nitContribuyentesResponse']['return']['nombre'], 'direccion' => $array['ns2nitContribuyentesResponse']['return']['direccion_completa']);
-			}
-		} catch (Exception $e) {
-			error_log('consultaNit() - Error al procesar la respuesta: ' . $e->getMessage());
-			$responseF[] = array('message' => 'error', 'msj' => 'Error al procesar la respuesta de la SAT');
+		$data = json_decode($output, true);
+		if (!is_array($data)) {
+			error_log('consultaCuiInfile() - Respuesta inesperada: ' . var_export($output, true));
+			return array(array('message' => 'error', 'msj' => 'CUI no encontrado en INFILE'));
 		}
-		return $responseF;
+
+		// La documentación de INFILE muestra la persona bajo la llave `cui`, pero algunos
+		// servicios externos varían entre `cui`, `data`, `datos` o campos planos.
+		$persona = array();
+		if (isset($data['cui']) && is_array($data['cui'])) {
+			$persona = $data['cui'];
+		} elseif (isset($data['data']) && is_array($data['data'])) {
+			$persona = $data['data'];
+		} elseif (isset($data['datos']) && is_array($data['datos'])) {
+			$persona = $data['datos'];
+		} else {
+			$persona = $data;
+		}
+
+		if (isset($persona[0]) && is_array($persona[0])) {
+			$persona = $persona[0];
+		}
+
+		$nombreDirecto = '';
+		if (isset($persona['nombre'])) {
+			$nombreDirecto = trim($persona['nombre']);
+		} elseif (isset($persona['Nombre'])) {
+			$nombreDirecto = trim($persona['Nombre']);
+		} elseif (isset($persona['nombreCompleto'])) {
+			$nombreDirecto = trim($persona['nombreCompleto']);
+		}
+
+		$nombre = trim(
+			$nombreDirecto != '' ? $nombreDirecto :
+			((isset($persona['primerNombre']) ? $persona['primerNombre'] : '') . ' ' .
+			(isset($persona['segundoNombre']) ? $persona['segundoNombre'] : '') . ' ' .
+			(isset($persona['primerApellido']) ? $persona['primerApellido'] : '') . ' ' .
+			(isset($persona['segundoApellido']) ? $persona['segundoApellido'] : ''))
+		);
+
+		if ($nombre == '') {
+			error_log('consultaCuiInfile() - CUI sin nombre. Respuesta: ' . var_export($output, true));
+			return array(array('message' => 'error', 'msj' => 'CUI sin nombre asociado en INFILE'));
+		}
+
+		return array(array('message' => 'success', 'nombre' => $nombre, 'direccion' => 'CIUDAD'));
+	}
+
+	private function getCredencialesInfile($idEmpresas)
+	{
+		$sql = "select usuarioAPI, llaveAPI from empresas where id=" . (int) $idEmpresas . ";";
+		$query = mysql_query($sql, dbCon::conPrincipal());
+		$reg = mysql_fetch_assoc($query);
+
+		return array(
+			'usuarioAPI' => isset($reg['usuarioAPI']) ? $reg['usuarioAPI'] : '',
+			'llaveAPI' => isset($reg['llaveAPI']) ? $reg['llaveAPI'] : ''
+		);
+	}
+
+	private function getTokenCuiInfile($idEmpresas, $credenciales)
+	{
+		$sessionKey = 'infile_cui_token_' . (int) $idEmpresas;
+		$expiraKey = 'infile_cui_token_expira_' . (int) $idEmpresas;
+
+		// INFILE limita los logins de CUI; se cachea el JWT en sesión hasta antes de expirar.
+		if (isset($_SESSION[$sessionKey]) && isset($_SESSION[$expiraKey]) && strtotime($_SESSION[$expiraKey]) > time() + 120) {
+			return $_SESSION[$sessionKey];
+		}
+
+		$ch = curl_init('https://certificador.feel.com.gt/api/v2/servicios/externos/login');
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+			'prefijo' => $credenciales['usuarioAPI'],
+			'llave' => $credenciales['llaveAPI']
+		));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+		$output = curl_exec($ch);
+		$error = curl_error($ch);
+		curl_close($ch);
+
+		if ($error != '') {
+			error_log('getTokenCuiInfile() - Error CURL: ' . $error);
+			return '';
+		}
+
+		$data = json_decode($output, true);
+		if (!is_array($data) || !isset($data['token'])) {
+			error_log('getTokenCuiInfile() - Respuesta inesperada: ' . var_export($output, true));
+			return '';
+		}
+
+		$_SESSION[$sessionKey] = $data['token'];
+		$_SESSION[$expiraKey] = isset($data['expiracion']) ? $data['expiracion'] : date('Y-m-d H:i:s', time() + 3600);
+
+		return $_SESSION[$sessionKey];
+	}
+
+	private function postJsonInfile($url, $payload, $headers)
+	{
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+		$output = curl_exec($ch);
+		$error = curl_error($ch);
+		curl_close($ch);
+
+		return array('body' => $output, 'error' => $error);
+	}
+
+	private function parseNitInfileXml($output)
+	{
+		try {
+			$xml = new SimpleXMLElement($output);
+			$nombre = isset($xml->Nombre) ? trim((string) $xml->Nombre) : '';
+			$mensaje = isset($xml->Mensaje) ? trim((string) $xml->Mensaje) : '';
+
+			if ($nombre != '') {
+				return array(array('message' => 'success', 'nombre' => $nombre, 'direccion' => 'CIUDAD'));
+			}
+
+			return array(array('message' => 'error', 'msj' => $mensaje != '' ? $mensaje : 'NIT no encontrado en INFILE'));
+		} catch (Exception $e) {
+			error_log('parseNitInfileXml() - Respuesta inesperada: ' . var_export($output, true));
+			return array(array('message' => 'error', 'msj' => 'Respuesta no valida de INFILE'));
+		}
 	}
 
 	/**

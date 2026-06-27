@@ -917,7 +917,7 @@ class Admin extends General {
 	 */
 	public function resumenDocumentosOperados($idEmpresa) {
 		$this->resultado = null;
-		$sql = "select 'cotizaciones' as documento ,count(*) as documentosOperados from ventas where date(created_at)=curdate() and idEmpresas=" . $idEmpresa . "
+		$sql = "select 'cotizaciones' as documento ,count(*) as documentosOperados from ventas where DATE(fechaFactura)=CURDATE() and tipoTransaccion = 1 and autorizacionFEL IS NOT NULL and anulacion = 0 and idEmpresas=" . $idEmpresa . "
                 union all
                 select 'pedidos' as documento ,count(*) as documentosOperados from pedidos where date(created_at)=curdate() and idEmpresas=" . $idEmpresa . "
                 union all
@@ -928,17 +928,17 @@ class Admin extends General {
                     AND idEmpresas = " . $idEmpresa . "
                     AND autorizacionFEL IS NOT NULL
                 union all
-                select 'compras' as documento ,count(*) as documentosOperados from compras where date(created_at)=curdate() and idEmpresas=" . $idEmpresa . "
+                select 'compras' as documento ,count(*) as documentosOperados from compras where DATE(fechaFactura)=CURDATE() and idEmpresas=" . $idEmpresa . "
                 union all
-                select 'totalCotizado' as documento ,sum(total) as documentosOperados from ventas where date(created_at)=curdate() and idEmpresas=" . $idEmpresa . "
+                select 'totalCotizado' as documento ,IFNULL(SUM(total), 0) as documentosOperados from ventas where DATE(fechaFactura)=CURDATE() and tipoTransaccion = 1 and autorizacionFEL IS NOT NULL and anulacion = 0 and idEmpresas=" . $idEmpresa . "
                 union all
-                select 'totalPedidos' as documento ,sum(total) as documentosOperados from pedidos where date(created_at)=curdate() and idEmpresas=" . $idEmpresa . "
+                select 'totalPedidos' as documento ,IFNULL(SUM(total), 0) as documentosOperados from pedidos where date(created_at)=curdate() and idEmpresas=" . $idEmpresa . "
                 union all
-                SELECT 'totalFacturado' as documento, SUM(total) as documentosOperados FROM ventas WHERE YEAR(fechaFactura) = YEAR(CURDATE()) AND tipoTransaccion = 1 AND autorizacionFEL IS NOT NULL AND idEmpresas=" . $idEmpresa . "
+                SELECT 'totalFacturado' as documento, IFNULL(SUM(total), 0) as documentosOperados FROM ventas WHERE YEAR(fechaFactura) = YEAR(CURDATE()) AND tipoTransaccion = 1 AND autorizacionFEL IS NOT NULL AND idEmpresas=" . $idEmpresa . "
                 union all
                 SELECT 'facturaciones' as documento, COUNT(id) as documentosOperados FROM ventas WHERE YEAR(fechaFactura) = YEAR(CURDATE()) AND tipoTransaccion = 1 AND autorizacionFEL IS NOT NULL AND idEmpresas=" . $idEmpresa . "
                 union all
-                select 'totalCompras' as documento ,sum(total) as documentosOperados from compras where date(created_at)=curdate() and idEmpresas=" . $idEmpresa . ";";
+                select 'totalCompras' as documento ,IFNULL(SUM(total), 0) as documentosOperados from compras where DATE(fechaFactura)=CURDATE() and idEmpresas=" . $idEmpresa . ";";
 		$query = mysql_query($sql, dbCon::conPrincipal());
 		while ($reg = mysql_fetch_assoc($query)) {
 			$this->resultado[] = $reg;

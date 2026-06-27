@@ -88,7 +88,7 @@ switch ($table) {
         break;
     case 'inventario':
             $columns .= "<td>Item</td>";
-            $columns .= "<td>Imagen</td>";
+            $columns .= "<td>Imagen.</td>";
             $columns .= "<td>Código</td>";
             $columns .= "<td>UPC</td>";
             $columns .= "<td>Descripción</td>";

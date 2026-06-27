@@ -1,8 +1,8 @@
 <?php
 /**
  * Login Page
- * @author Richard Sasvin
- * @version 2.1 20260430
+ * @author Jonathan Juarez
+ * @version 1.0 20141123
  */
 session_start();
 require_once ("models/config.php");
@@ -67,7 +67,7 @@ if ($_SESSION['userName'] != '') {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="DIGICOM.COM.GT  ERP POS CRM Ecommerce Guatemala">
         <meta name="author" content="info@digicom.com.gt">
-        <link rel="icon" type="image/png" sizes="50x50" href="assets/images/logo_digicom.png">
+        <link rel="icon" type="image/png" sizes="50x50" href="assets/images/logo_cubix.png">
         <title><?= Config::$systemName ?></title>
         <!--Core CSS -->
         <link href="assets/bs3/css/bootstrap.min.css" rel="stylesheet">

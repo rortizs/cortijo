@@ -1,7 +1,7 @@
 <?php
 /** Reportes - Ventas Por Producto
- * @author Richard Sasvin
- * @version 2.1 20260430
+ * @author Jonathan Juarez
+ * @version 2.0 20161220
  */
 session_start();
 ?>

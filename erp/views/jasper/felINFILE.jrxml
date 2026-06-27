@@ -353,7 +353,7 @@
 				<text><![CDATA[DIRECCION:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="65" y="0" width="324" height="20" uuid="ed4c2f71-6424-4ead-96c4-759a300ff290"/>
+				<reportElement x="65" y="0" width="334" height="20" uuid="ed4c2f71-6424-4ead-96c4-759a300ff290"/>
 				<box topPadding="0" leftPadding="0" rightPadding="0"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial" size="8"/>
@@ -369,7 +369,7 @@
 				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="350" y="0" width="85" height="20" uuid="9e64cd7a-49dc-4bd6-b038-0fb1a870af03"/>
+				<reportElement x="375" y="0" width="85" height="20" uuid="9e64cd7a-49dc-4bd6-b038-0fb1a870af03"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial Black" size="8" isBold="true"/>

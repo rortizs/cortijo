@@ -80,7 +80,7 @@ $admin = new Admin();
                                 ?>
                                 <tr>
                                     <td><?= ($b + 1); ?></td>
-                                    <td><?= $getProductos[$b]['sku']; ?>- <?= $getProductos[$b]['descLarga'];?></td>
+                                    <td><?= $getProductos[$b]['sku']; ?> - <?= $getProductos[$b]['descLarga']; ?></td>
                                     <?php
                                     $total = 0;
                                     for ($a = 0; $a < count($getPuntosIngreso); $a++) {

@@ -1,8 +1,8 @@
 <?php
 
 /** cajaController
- *  @author Richard Sasvin
- *  @version 2.1 20260430
+ *  @author Jonathan Juarez
+ *  @version 2.0 20161209
  */
 session_start();
 date_default_timezone_set("America/Guatemala");

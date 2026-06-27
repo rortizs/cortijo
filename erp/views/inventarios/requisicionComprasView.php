@@ -1,8 +1,8 @@
 <?php
 /**
  * POS / Inventarios - Requisicion de Compras
- * @author Richard Sasvin
- * @version 2.1 20260430
+ * @author Jonathan Juarez
+ * @version 2.0 20170214
  */
 session_start();
 require_once("../../models/inventarios.php");

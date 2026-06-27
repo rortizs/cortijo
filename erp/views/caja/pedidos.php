@@ -187,7 +187,7 @@ $facturacionConf = $inventarios->facturacionConf('pedidos', $_SESSION['idEmpresa
                                         </button>
                                     </span>
                                     <input type="text" class="form-control input-sm pedidos" id="codigo" onKeydown="javascript: if (event.keyCode == 13 || event.keyCode == 9)
-                                                loadProductoByCodigo();" tabindex="6">
+                                                loadProductoByCodigo();" tabindex="6" style="text-transform: uppercase !important;">
                                 </div>
                             </div>
                             <div class="col-sx-3 col-sm-3 col-md-3 col-lg-3">

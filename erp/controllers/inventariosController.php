@@ -1,8 +1,8 @@
 <?php
 
 /** inventariosController
- *  @author Richard Sasvin
- *  @version 2.1 20260430
+ *  @author Jonathan Juarez
+ *  @version 2.1 20170831
  */
 session_start();
 date_default_timezone_set("America/Guatemala");

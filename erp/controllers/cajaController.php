@@ -387,6 +387,7 @@ switch ($service) {
         echo json_encode($process);
         break;
     case 'consultaNIT':
+        $_REQUEST['idEmpresas'] = $_SESSION['idEmpresa'] ?: $_SESSION['idEmpresas'];
         $data = $caja->consultaNIT($_REQUEST);
         echo json_encode($data);
         break;
