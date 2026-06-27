@@ -1,12 +1,12 @@
 <?php
 /**
  * POS / Seleccione de empresas
- * @author Richard Sasvin
- * @version 2.1 20260430
+ * @author Jonathan Juarez
+ * @version 1.0 20160805
  */
 session_start();
 $release_version = date('Y.m.d.H.i.s');
-if (!empty($_SESSION['userName']) && !empty($_SESSION['idRoles'])) {
+if ($_SESSION['userName'] != '') {
     require_once ("models/config.php");
     require_once ("models/login.php");
     $login = new Login();
@@ -35,7 +35,7 @@ if (!empty($_SESSION['userName']) && !empty($_SESSION['idRoles'])) {
             <div class="empresas">
                 <div class="row">
                     <div class="col-lg-6 logoCubix text-center">
-                        <img src="assets/images/logo_digicom.png" class="img-responsive">
+                        <img src="assets/images/LogoCortijo_login.png" class="img-responsive">
                         <br/>
                         <?php
                         if ($_SESSION['idRoles'] == '1') {

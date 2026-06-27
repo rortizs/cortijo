@@ -1,8 +1,8 @@
 <?php
 /**
  * POS / Inventarios - Recepcion de Compras
- * @author Richard Sasvin
- * @version 2.1 20260430
+ * @author Jonathan Juarez
+ * @version 2.1 20170814
  */
 session_start();
 $today = date('d-m-Y');

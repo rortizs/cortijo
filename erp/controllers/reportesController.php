@@ -175,6 +175,11 @@ case 'top10mes':
 	$data = $reportes->top10mes($_REQUEST);
 	echo json_encode($data);
 	break;
+case 'top10mesCompras':
+	$_REQUEST['idEmpresas'] = $_SESSION['idEmpresa'] ?: $_SESSION['idEmpresas'];
+	$data = $reportes->top10mesCompras($_REQUEST);
+	echo json_encode($data);
+	break;
 case 'ultimas10Transacciones':
 	$_REQUEST['idEmpresas'] = $_SESSION['idEmpresa'] ?: $_SESSION['idEmpresas'];
 	$data = $reportes->ultimas10Transacciones($_REQUEST);

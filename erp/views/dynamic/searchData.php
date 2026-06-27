@@ -88,9 +88,9 @@ switch ($_REQUEST['table']) {
         'dt' => 1,
         'formatter' => function($d, $row) {
             if (!$d) {
-                return '<img src="assets/images/producto.png" class="img-fluid" alt="Responsive image"style="width:200px !important;"/>';
+                return '<img src="assets/images/producto.png" class="img-fluidcircle" alt="Responsive image" style="width:200px !important;"/>';
             } else {
-                return '<img src="assets/images/productos/' . $d . '" class="img-fluid" alt="Resposive image"style="width:200px !important;"/>';
+                return '<img src="assets/images/productos/' . $d . '"class="img-fluidcircle" alt="Responsive image" style="width:200px !important;"/>';
             }
         }
             ),

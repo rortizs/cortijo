@@ -3,7 +3,7 @@
 /**
  * Description of planilla
  *
- * @author Richard Sasvin
+ * @author jjuarez
  */
 require_once ("dbCon.php");
 require_once ("general.php");

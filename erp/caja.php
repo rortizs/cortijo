@@ -121,7 +121,7 @@ if (!empty($_SESSION['userName']) && !empty($_SESSION['idRoles'])) {
                                                 break;
                                         }
                                         ?>
-                                        <li><a href="logout.php?action=logout"><i class="fa fa-power-off"></i> Cerrar Sesión</a></li>
+                                        <li><a href="logout.php?action=logout" target="_self" onclick="window.location.href='logout.php?action=logout'; return false;"><i class="fa fa-power-off"></i> Cerrar Sesión</a></li>
                                     </ul>
                                 </li>
                             </ul>

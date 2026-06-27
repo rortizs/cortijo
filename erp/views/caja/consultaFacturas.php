@@ -75,7 +75,7 @@ $general = new General();
                     </div>
                     <div class="col-lg-12">
                         <label>&nbsp;</label><br/>
-                        <!--<button class="btn btn-primary btn-sm" onclick="loadFacturacion();">
+<!--                        <button class="btn btn-primary btn-sm" onclick="loadFacturacion();">
                             <i class="fa fa-plus"></i> Nuevo
                         </button>-->
                             <button class="btn btn-primary btn-sm" onclick="consultarFacturas();">
@@ -96,8 +96,6 @@ $general = new General();
                         <button type="button" class="btn btn-success btn-sm" onclick="exportarReporteFacturacion();">
                             <span class="fa fa-file-excel-o"></span> Exportar a Excel
                         </button>
-                        
-                        
                     </div>
                 </div>
             </div>

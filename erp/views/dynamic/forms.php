@@ -1,8 +1,8 @@
 <?php
 /**
  * dynamic.php view
- * @author Richard Sasvin
- * @version 2.1 20260430
+ * @author Jonathan Juarez
+ * @version 1.0 20140122
  */
 session_start();
 require_once("../../models/config.php");

@@ -177,7 +177,7 @@ $facturacionConf = $inventarios->facturacionConf('pedidos', $_SESSION['idEmpresa
                     </div>
                     <div class="col-sx-2 col-sm-2 col-md-2 col-lg-2">
                         <label>Cantidad</label>
-                        <input type="text" class="form-control input-sm" id="cantidadProducto" value="" onKeydown="javascript: if (event.keyCode == 13 || event.keyCode == 9) agregarProductoCotizacion();">
+                        <input type="text" class="form-control input-sm" id="cantidadProducto" value="" onKeydown="javascript: if (event.keyCode == 13 || event.keyCode == 9) { console.log('onKeyDown event triggered'); agregarProductoCotizacion(); }">
                     </div>
                     <div class="clear">&nbsp;</div>
                     <div class="col-lg-12">

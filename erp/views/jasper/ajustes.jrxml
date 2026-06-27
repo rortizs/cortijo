@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="traslados" language="groovy" pageWidth="612" pageHeight="792" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="28cf6f03-03e3-4ff5-a756-b0b7b3f098e0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="traslados" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="28cf6f03-03e3-4ff5-a756-b0b7b3f098e0">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -17,7 +16,7 @@
 FROM
     vw_ajustes as a
     left join inventarios as b on(a.documento=b.documento)
-    inner join productos as c on(b.idProductos=c.id)
+    left join productos as c on(b.idProductos=c.id)
 where
     a.id=$P{idAjustes}]]>
 	</queryString>
@@ -223,7 +222,7 @@ where
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sku}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
+			<textField isStretchWithOverflow="true">
 				<reportElement x="200" y="0" width="272" height="20" uuid="fe61faeb-996c-4608-afcb-2c1214150670"/>
 				<textElement>
 					<font size="8"/>
@@ -295,7 +294,7 @@ where
 				</textElement>
 				<text><![CDATA[OBSERVACIONES:]]></text>
 			</staticText>
-			<textField textAdjust="StretchHeight">
+			<textField isStretchWithOverflow="true">
 				<reportElement x="100" y="21" width="372" height="20" uuid="09cd80ba-ca22-4d68-8109-a31b059d3b0f"/>
 				<textElement>
 					<font size="9"/>

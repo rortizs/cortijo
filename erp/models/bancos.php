@@ -3,7 +3,7 @@
 /**
  * Description of bancos
  *
- * @author Richard Sasvin
+ * @author jjuarez
  */
 require_once ("dbCon.php");
 require_once ("general.php");

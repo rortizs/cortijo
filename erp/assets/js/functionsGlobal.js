@@ -21,6 +21,10 @@ function initDT(selector, opts) {
   $(selector).DataTable($.extend({ language: _dtLang }, opts || {}));
 }
 
+function hasGoogleCharts() {
+  return typeof google !== "undefined" && google.charts;
+}
+
 $(document).ready(function () {
   today = moment().format("DD-MM-YYYY");
   //checkSessionAlive();
@@ -71,7 +75,9 @@ $(document).ready(function () {
   ultimas10Transacciones();
   totalDtes();
   getDteSaldo();
-  google.charts.setOnLoadCallback(getDtesPorMes);
+  if (hasGoogleCharts() && document.getElementById("chart_dte")) {
+    google.charts.setOnLoadCallback(getDtesPorMes);
+  }
   ultimos7dias();
   currentYear();
   ventasHoy("MesAnterior");
@@ -1114,42 +1120,63 @@ function loadClientesNit(nit, codCliente) {
     $("#nombre").focus();
     $("#loader").hide();
   } else {
-    params = {
-      service: "getCliente",
-      nit: nitC.replace(/-/g, ""),
-      codCliente: codCliente,
-    };
-    $.post(
-      "controllers/adminController.php",
-      params,
-      function (data) {
-        if (data == null) {
-          console.log("busca en sat");
-          consultaNIT();
-          return false;
-        } else {
-          $.each(data, function (key, val) {
-            $("#idClientes").val(val.id);
-            $("#nit").val(val.nitC);
-            $("#codigoC").val(val.codigoC);
-            $("#nombre").val(val.nombreF);
-            $("#telefono").val(val.telefonoC);
-            $("#direccion").val(val.direccionC);
-            if (dbProject === "pos_vitalab") {
-              $("#observaciones").val(txtObservaciones + " " + val.nombreC);
-            } else {
-              $("#observaciones").val(txtObservaciones);
-            }
-            $("#idTipoOperacion").focus();
-            //$("#motivo").attr('readonly', true);
-          });
-          $("#nombre").focus();
-        }
-      },
-      "json"
-    ).done(function () {
-      $("#modal1").modal("hide");
-      $("#loader").hide();
+    // Para facturación el dato fiscal debe venir primero de SAT/INFILE.
+    // La tabla local de clientes se usa solo como respaldo porque puede tener datos históricos incorrectos.
+    consultaNIT(function (encontradoEnInfile, mensajeInfile) {
+      if (encontradoEnInfile) {
+        $("#modal1").modal("hide");
+        $("#loader").hide();
+        return false;
+      }
+
+      // Si el usuario buscó por NIT/CUI, NO debemos rellenar con clientes locales viejos:
+      // esa fue la causa de nombres incorrectos en facturación. El fallback local queda solo
+      // para búsquedas por código de cliente ya existentes.
+      if (codCliente === undefined) {
+        $("#nombre").val("");
+        $("#direccion").val("");
+        $("#telefono").val("");
+        alert((mensajeInfile || "No fue posible validar el NIT/CUI en INFILE") + ",\nintente ingresar el nit correctamente");
+        $("#loader").hide();
+        return false;
+      }
+
+      params = {
+        service: "getCliente",
+        nit: nitC.replace(/-/g, ""),
+        codCliente: codCliente,
+      };
+      $.post(
+        "controllers/adminController.php",
+        params,
+        function (data) {
+          if (data == null) {
+            consultaNIT();
+            return false;
+          } else {
+            $.each(data, function (key, val) {
+              $("#idClientes").val(val.id);
+              $("#nit").val(val.nitC);
+              $("#codigoC").val(val.codigoC);
+              $("#nombre").val(val.nombreF);
+              $("#telefono").val(val.telefonoC);
+              $("#direccion").val(val.direccionC);
+              if (dbProject === "pos_vitalab") {
+                $("#observaciones").val(txtObservaciones + " " + val.nombreC);
+              } else {
+                $("#observaciones").val(txtObservaciones);
+              }
+              $("#idTipoOperacion").focus();
+              //$("#motivo").attr('readonly', true);
+            });
+            $("#nombre").focus();
+          }
+        },
+        "json"
+      ).done(function () {
+        $("#modal1").modal("hide");
+        $("#loader").hide();
+      });
     });
   }
 }
@@ -1274,7 +1301,7 @@ function resumenDepositos(target, idCentrosCosto) {
   );
 }
 //
-function consultaNIT() {
+function consultaNIT(callback) {
   if ($("#nit").val().replace(/-/g, "") !== "CF") {
     params = {
       service: "consultaNIT",
@@ -1284,21 +1311,30 @@ function consultaNIT() {
       "controllers/cajaController.php",
       params,
       function (data) {
+        var encontrado = false;
+        var mensaje = "";
         $.each(data, function (key, val) {
           switch (val.message) {
             case "success":
+              encontrado = true;
               $("#nombre").val(val.nombre);
               $("#direccion").val(val.direccion);
               break;
             default:
-              alert(`${val.msj},\nintente ingresar el nit correctamente`);
+              mensaje = val.msj || "No fue posible validar el NIT/CUI en INFILE";
+              if (typeof callback !== "function") {
+                alert(`${val.msj},\nintente ingresar el nit correctamente`);
+              }
               break;
           }
         });
+        if (typeof callback === "function") callback(encontrado, mensaje);
       },
       "json"
     ).done(function () {
-      $("#loader").hide();
+      if (typeof callback !== "function") {
+        $("#loader").hide();
+      }
     });
   }
 }
@@ -1846,6 +1882,9 @@ function resumenInventario() {
 // VENTAS POR MES - Gráfica de barras con selector de año
 // ============================================================
 function ventasPorMes() {
+  if (!document.getElementById("chart_ventas_mes")) return;
+  if (!hasGoogleCharts()) return;
+
   var anio = $("#ventasMesAnio").val() || new Date().getFullYear();
   $("#ventasMesTitulo").text("Año " + anio);
 
@@ -1883,6 +1922,7 @@ function ventasPorMes() {
         ]);
       }
 
+      if (!hasGoogleCharts()) return;
       google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(function () {
         var dataTable = google.visualization.arrayToDataTable(chartData);

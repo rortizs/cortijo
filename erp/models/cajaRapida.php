@@ -2,9 +2,9 @@
 
 /**
  * general.class
- * @author Richard Sasvin
- * @version 2.1 20260430
- * @version 2.1 20260430
+ * @author Jonathan Juarez
+ * @version 1.0 20140107
+ * @version update 2.0 20150815
  */
 require_once ("dbCon.php");
 

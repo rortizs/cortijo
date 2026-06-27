@@ -2,8 +2,8 @@
 
 /**
  * POS /Modulo Inventarios - Class Inventarios
- * @author Richard Sasvin
- * @version 2.1 20260430
+ * @author Jonathan Juarez
+ * @version 1.0 20140909
  */
 require_once("dbCon.php");
 require_once("general.php");

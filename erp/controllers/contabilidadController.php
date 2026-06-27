@@ -1,7 +1,7 @@
 <?php
 
 /** contabilidadController
- *  @author Richard Sasvin
+ *  @autho
  * 
  */
 session_start();
