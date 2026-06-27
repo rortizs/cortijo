@@ -1,0 +1,71 @@
+name: Deploy Cortijo production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cortijo-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to on-premise server
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    env:
+      CORTIJO_DEPLOY_HOST: ${{ secrets.CORTIJO_DEPLOY_HOST || '100.120.149.23' }}
+      CORTIJO_DEPLOY_USER: ${{ secrets.CORTIJO_DEPLOY_USER || 'root' }}
+      DEPLOY_COMMIT: ${{ github.sha }}
+      REPO_URL: https://github.com/rortizs/cortijo.git
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+
+      - name: Connect runner to Tailscale
+        uses: tailscale/github-action@6cae46e2d796f265265cfcf628b72a32b4d7cade # v3
+        with:
+          authkey: ${{ secrets.TS_AUTHKEY }}
+
+      - name: Configure SSH
+        env:
+          CORTIJO_DEPLOY_SSH_KEY: ${{ secrets.CORTIJO_DEPLOY_SSH_KEY }}
+          CORTIJO_SSH_KNOWN_HOSTS: ${{ secrets.CORTIJO_SSH_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "$CORTIJO_DEPLOY_SSH_KEY" ]; then
+            echo "CORTIJO_DEPLOY_SSH_KEY secret is required" >&2
+            exit 1
+          fi
+
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CORTIJO_DEPLOY_SSH_KEY" > ~/.ssh/cortijo_deploy
+          chmod 600 ~/.ssh/cortijo_deploy
+
+          if [ -n "$CORTIJO_SSH_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$CORTIJO_SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            timeout 30 ssh-keyscan -H "$CORTIJO_DEPLOY_HOST" > ~/.ssh/known_hosts
+          fi
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy over SSH
+        run: |
+          set -euo pipefail
+
+          ssh -i ~/.ssh/cortijo_deploy \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            "$CORTIJO_DEPLOY_USER@$CORTIJO_DEPLOY_HOST" \
+            "REPO_URL='$REPO_URL' DEPLOY_COMMIT='$DEPLOY_COMMIT' bash -s" \
+            < scripts/deploy/cortijo-production.sh
