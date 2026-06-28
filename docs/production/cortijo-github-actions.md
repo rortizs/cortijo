@@ -59,15 +59,16 @@ The workflow SSHes into production and runs `scripts/deploy/cortijo-production.s
 1. verifies PHP CLI and Apache use PHP 5.6;
 2. clones/fetches the repo under `/opt/cortijo/repo`;
 3. checks out the deployed commit;
-4. backs up `/var/www/html/erp` to `/root/cortijo-backups`;
-5. rsyncs `repo/erp/` into `/var/www/html/erp/` without deleting production-only files;
-6. uses checksum comparison so same-content files are not rewritten only because mtimes differ;
-7. excludes `models/config.php`, logs, temp directories, IDE files, and upload/media folders:
+4. runs PHP 5.6 syntax validation on deployable source files before changing webroot;
+5. backs up `/var/www/html/erp` to `/root/cortijo-backups`;
+6. rsyncs `repo/erp/` into `/var/www/html/erp/` without deleting production-only files;
+7. uses checksum comparison so same-content files are not rewritten only because mtimes differ;
+8. excludes `models/config.php`, `models/configuraciones.php`, known repo-only legacy admin/ticket files, logs, temp directories, IDE files, and upload/media folders:
    - `assets/docClientes/`
    - `assets/images/clientes/`
    - `assets/images/empleados/`
    - `assets/images/productos/`
-8. lints deployed PHP files;
-9. re-checks PHP 5.6.
+9. lints deployed PHP files;
+10. re-checks PHP 5.6.
 
 Manual reruns are available through `workflow_dispatch` in GitHub Actions.
