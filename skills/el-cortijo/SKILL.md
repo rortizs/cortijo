@@ -23,7 +23,7 @@ Do not use it for the shared/global ERP unless the user explicitly confirms that
 - Never run `apt upgrade`, `apt dist-upgrade`, or `apt autoremove` during deploy work.
 - Always create a backup before changing `/var/www/html/erp`.
 - Deploy only after PR review/validation and merge to `main`.
-- Preserve production-only `models/config.php` and upload/media directories.
+- Preserve production-only config, legacy excluded files, and upload/media directories.
 
 ## Decision Gates
 
@@ -31,6 +31,7 @@ Do not use it for the shared/global ERP unless the user explicitly confirms that
 | --- | --- |
 | Need production deploy | Use GitHub Actions or the deploy script; avoid manual copies. |
 | Media/upload changes requested | Treat as production data; require explicit approval. |
+| Source PHP lint fails | Stop before rsync; do not modify webroot. |
 | PHP is not 5.6 | Stop; fix runtime plan explicitly before deploying. |
 | Webroot differs from `/var/www/html/erp` | Stop and re-validate Apache vhost before writing. |
 | Server package changes requested | Ask for explicit approval and rollback plan. |

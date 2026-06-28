@@ -37,6 +37,70 @@ verify_php_runtime() {
 	fi
 }
 
+is_excluded_deploy_path() {
+	case "$1" in
+	models/config.php | \
+	models/configuraciones.php | \
+	controllers/adminsController.php | \
+	models/admins.php | \
+	views/reportes/ticket.php | \
+	views/reportes/ticket.jrxml | \
+	views/reportes/ticket.jasper | \
+	tmp/* | \
+	logs/* | \
+	*.log | \
+	.project | \
+	.settings/* | \
+	.metadata/* | \
+	.classpath | \
+	.DS_Store | \
+	assets/docClientes/* | \
+	assets/images/clientes/* | \
+	assets/images/empleados/* | \
+	assets/images/productos/*)
+		return 0
+		;;
+	*)
+		return 1
+		;;
+	esac
+}
+
+build_lint_lists() {
+	: >"$source_lint_list"
+	: >"$deployed_lint_list"
+
+	while IFS= read -r -d '' repo_file; do
+		rel="${repo_file#erp/}"
+		is_excluded_deploy_path "$rel" && continue
+
+		case "$rel" in
+		*.php)
+			printf '%s\0' "$REPO_DIR/$repo_file" >>"$source_lint_list"
+			deployed_file="$WEBROOT/$rel"
+			[ -f "$deployed_file" ] && printf '%s\0' "$deployed_file" >>"$deployed_lint_list"
+			;;
+		esac
+	done < <(git -C "$REPO_DIR" ls-files -z -- erp)
+}
+
+run_php_lint_list() {
+	label="$1"
+	list_file="$2"
+	output_file="$3"
+
+	if [ ! -s "$list_file" ]; then
+		fail "No PHP files found to lint for $label"
+	fi
+
+	lint_count="$(tr -cd '\0' <"$list_file" | wc -c | tr -d ' ')"
+	log "Running php -l on $lint_count $label PHP files"
+	if ! xargs -0 -n 1 php -l <"$list_file" >"$output_file" 2>&1; then
+		cat "$output_file" >&2
+		fail "PHP syntax validation failed for $label"
+	fi
+}
+
 log "Verifying PHP 5.6 runtime"
 verify_php_runtime
 
@@ -66,6 +130,14 @@ git -C "$REPO_DIR" reset --hard "$target"
 
 [ -d "$REPO_DIR/erp" ] || fail "Repository clone does not contain erp/"
 
+source_lint_list="$(mktemp)"
+deployed_lint_list="$(mktemp)"
+lint_output="$(mktemp)"
+trap 'rm -f "$source_lint_list" "$deployed_lint_list" "$lint_output"' EXIT
+
+build_lint_lists
+run_php_lint_list "source" "$source_lint_list" "$lint_output"
+
 if [ -d "$WEBROOT" ]; then
 	timestamp="$(date +%Y%m%d-%H%M%S)"
 	backup_file="$BACKUP_DIR/erp-$timestamp.tar.gz"
@@ -79,6 +151,12 @@ fi
 log "Deploying repo/erp/ to $WEBROOT without deleting production-only files"
 rsync -rcl \
 	--exclude 'models/config.php' \
+	--exclude 'models/configuraciones.php' \
+	--exclude 'controllers/adminsController.php' \
+	--exclude 'models/admins.php' \
+	--exclude 'views/reportes/ticket.php' \
+	--exclude 'views/reportes/ticket.jrxml' \
+	--exclude 'views/reportes/ticket.jasper' \
 	--exclude 'tmp/' \
 	--exclude 'logs/' \
 	--exclude '*.log' \
@@ -93,31 +171,8 @@ rsync -rcl \
 	--exclude 'assets/images/productos/' \
 	"$REPO_DIR/erp/" "$WEBROOT/"
 
-lint_list="$(mktemp)"
-lint_output="$(mktemp)"
-trap 'rm -f "$lint_list" "$lint_output"' EXIT
-
-while IFS= read -r -d '' repo_file; do
-	rel="${repo_file#erp/}"
-	case "$rel" in
-	models/config.php) continue ;;
-	*.php)
-		deployed_file="$WEBROOT/$rel"
-		[ -f "$deployed_file" ] && printf '%s\0' "$deployed_file" >>"$lint_list"
-		;;
-	esac
-done < <(git -C "$REPO_DIR" ls-files -z -- erp)
-
-if [ -s "$lint_list" ]; then
-	lint_count="$(tr -cd '\0' <"$lint_list" | wc -c | tr -d ' ')"
-	log "Running php -l on $lint_count deployed PHP files"
-	if ! xargs -0 -n 1 php -l <"$lint_list" >"$lint_output"; then
-		cat "$lint_output" >&2
-		fail "PHP syntax validation failed"
-	fi
-else
-	fail "No deployed PHP files found to lint"
-fi
+build_lint_lists
+run_php_lint_list "deployed" "$deployed_lint_list" "$lint_output"
 
 log "Re-checking PHP 5.6 runtime after deploy"
 verify_php_runtime
