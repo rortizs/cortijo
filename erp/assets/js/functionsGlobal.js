@@ -39,6 +39,7 @@ $(document).ready(function () {
   });
   resumenDocumentosOperados();
   ventasPorMes();
+  ventasPorMesTabla();
   if (dbProject === "erp_suplegt" || dbProject === "erp_suple") {
     $(".depositosDetalle").show();
     //
@@ -1627,6 +1628,55 @@ function getDtesPorMes() {
         $("#dteTotalSaldo").html('<span class="text-muted">-</span>');
       }
       drawDteChart(chartRows, anio);
+    },
+    "json"
+  );
+}
+
+function ventasPorMesTabla() {
+  if (!document.getElementById("tblVentasPorMes")) return;
+
+  var anio = $("#ventasTablaAnio").val() || new Date().getFullYear();
+  var meses = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
+               'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+  $("#tblVentasPorMesBody").html(
+    '<tr><td colspan="3" class="text-center"><i class="fa fa-spinner fa-spin"></i> Cargando...</td></tr>'
+  );
+
+  $.post(
+    "controllers/adminController.php",
+    { service: "ventasPorMes", anio: anio },
+    function (data) {
+      var ventasPorMesData = {};
+      var html = "";
+      var totalCantidad = 0;
+      var totalMonto = 0;
+
+      if (data && data.length > 0) {
+        $.each(data, function (key, val) {
+          ventasPorMesData[parseInt(val.mes)] = {
+            cantidadVentas: parseInt(val.cantidadVentas) || 0,
+            totalVentas: parseFloat(val.totalVentas) || 0
+          };
+        });
+      }
+
+      for (var m = 1; m <= 12; m++) {
+        var row = ventasPorMesData[m] || { cantidadVentas: 0, totalVentas: 0 };
+        totalCantidad += row.cantidadVentas;
+        totalMonto += row.totalVentas;
+        html += '<tr>' +
+          '<td>' + meses[m] + '</td>' +
+          '<td class="text-right">' + accounting.formatNumber(row.cantidadVentas, 0) + '</td>' +
+          '<td class="text-right">' + accounting.formatNumber(row.totalVentas, 2) + '</td>' +
+          '</tr>';
+      }
+
+      $("#tblVentasPorMesBody").html(html);
+      $("#ventasTablaTotalCantidad").text(accounting.formatNumber(totalCantidad, 0));
+      $("#ventasTablaTotalMonto").text(accounting.formatNumber(totalMonto, 2));
+      initDT('#tblVentasPorMes', { paging: false, ordering: false });
     },
     "json"
   );
