@@ -18,6 +18,26 @@ $dbS = $_SESSION['dbProject'];
 $service = $_REQUEST['service'];
 switch ($service) {
     case 'save':
+        if (isset($_POST['table']) && $_POST['table'] == 'empresas') {
+            $idPaises = '';
+            if (isset($_POST['data']) && is_array($_POST['data'])) {
+                foreach ($_POST['data'] as $campoEmpresa) {
+                    if (isset($campoEmpresa['idPaises'])) {
+                        $idPaises = $campoEmpresa['idPaises'];
+                        break;
+                    }
+                }
+            }
+            if ($idPaises === '' || (int) $idPaises === 0) {
+                http_response_code(400);
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode(array(
+                    'error' => true,
+                    'message' => 'Debe seleccionar un país válido antes de guardar la empresa. Si Guatemala no aparece, primero debe reparar el catálogo de países.'
+                ));
+                exit;
+            }
+        }
         $tableStructure = $dynamic->tableStructure($dbC, $dbS, $_POST['table']);
         $campos = array();
         $valores = array();
