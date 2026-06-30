@@ -954,11 +954,13 @@ class Admin extends General {
 		$this->resultado = null;
 		$sql = "SELECT
                     MONTH(fechaFactura) AS mes,
-                    SUM(total) AS totalVentas
+                    COUNT(*) AS cantidadVentas,
+                    IFNULL(SUM(total), 0) AS totalVentas
                 FROM ventas
                 WHERE YEAR(fechaFactura) = " . $anio . "
                     AND tipoTransaccion = 1
                     AND autorizacionFEL IS NOT NULL
+                    AND anulacion = 0
                     AND idEmpresas = " . (int) $idEmpresa . "
                 GROUP BY MONTH(fechaFactura)
                 ORDER BY MONTH(fechaFactura)";
