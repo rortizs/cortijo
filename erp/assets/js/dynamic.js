@@ -738,6 +738,13 @@ function AddEmpresa(table, title) {
 }
 //
 function saveEmpresa(campos, table, title) {
+    if (table === 'empresas' && $('#idPaises').length) {
+        var idPaises = $('#idPaises').val();
+        if (!idPaises || idPaises === '0') {
+            alert('Debe seleccionar un país válido antes de guardar la empresa. Si Guatemala no aparece, primero debe reparar el catálogo de países.');
+            return false;
+        }
+    }
     fields = campos.split(",");
     var dataForm = [];
     for (var i = 0; i < fields.length; i++) {
@@ -753,6 +760,12 @@ function saveEmpresa(campos, table, title) {
     };
     $.post('controllers/inventariosController.php', params).done(function (data) {
         location.reload();
+    }).fail(function (xhr) {
+        var message = 'No se pudo guardar la empresa.';
+        if (xhr.responseJSON && xhr.responseJSON.message) {
+            message = xhr.responseJSON.message;
+        }
+        alert(message);
     });
 }
 //*******************************************************************************

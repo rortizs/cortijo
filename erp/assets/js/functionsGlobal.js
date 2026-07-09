@@ -1641,6 +1641,46 @@ function getDtesPorMes() {
   );
 }
 
+function renderVentasPorMesTabla(data) {
+  if (!document.getElementById("tblVentasPorMes")) return;
+
+  var meses = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio',
+               'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  var ventasPorMesData = {};
+  var html = "";
+  var totalCantidad = 0;
+  var totalMonto = 0;
+
+  if (data && data.length > 0) {
+    $.each(data, function (key, val) {
+      ventasPorMesData[parseInt(val.mes)] = {
+        cantidadVentas: parseInt(val.cantidadVentas) || 0,
+        totalVentas: parseFloat(val.totalVentas) || 0
+      };
+    });
+  }
+
+  for (var m = 1; m <= 12; m++) {
+    var row = ventasPorMesData[m] || { cantidadVentas: 0, totalVentas: 0 };
+    totalCantidad += row.cantidadVentas;
+    totalMonto += row.totalVentas;
+    html += '<tr>' +
+      '<td>' + meses[m] + '</td>' +
+      '<td class="text-right">' + accounting.formatNumber(row.cantidadVentas, 0) + '</td>' +
+      '<td class="text-right">' + accounting.formatNumber(row.totalVentas, 2) + '</td>' +
+      '</tr>';
+  }
+
+  $("#tblVentasPorMesBody").html(html);
+  $("#ventasTablaTotalCantidad").text(accounting.formatNumber(totalCantidad, 0));
+  $("#ventasTablaTotalMonto").text(accounting.formatNumber(totalMonto, 2));
+  initDT('#tblVentasPorMes', { paging: false, ordering: false });
+}
+
+function ventasPorMesTabla() {
+  ventasPorMes($("#ventasTablaAnio").val());
+}
+
 function drawDteChart(rows, anio) {
   if (!document.getElementById("chart_dte")) return;
   if (typeof google === "undefined" || typeof google.visualization === "undefined") return;
@@ -1890,12 +1930,77 @@ function resumenInventario() {
 // ============================================================
 // VENTAS POR MES - Gráfica de barras con selector de año
 // ============================================================
-function ventasPorMes() {
+function drawVentasPorMesChart(data, anio) {
   if (!document.getElementById("chart_ventas_mes")) return;
   if (!hasGoogleCharts()) return;
 
-  var anio = $("#ventasMesAnio").val() || new Date().getFullYear();
+  var meses = [
+    "", "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+    "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
+  ];
+
+  // Construir array de datos para Google Charts
+  var chartData = [["Mes", "Total Ventas", { role: "annotation" }]];
+  var totalesPorMes = {};
+
+  if (data && data.length > 0) {
+    $.each(data, function (key, val) {
+      totalesPorMes[parseInt(val.mes)] = parseFloat(val.totalVentas) || 0;
+    });
+  }
+
+  // Asegurarse de incluir los 12 meses (con 0 si no hay ventas)
+  for (var m = 1; m <= 12; m++) {
+    var total = totalesPorMes[m] || 0;
+    chartData.push([
+      meses[m],
+      total,
+      total > 0 ? accounting.formatNumber(total, 2) : ""
+    ]);
+  }
+
+  google.charts.load("current", { packages: ["corechart"] });
+  google.charts.setOnLoadCallback(function () {
+    var dataTable = google.visualization.arrayToDataTable(chartData);
+    var options = {
+      title: "",
+      width: "100%",
+      height: 320,
+      bar: { groupWidth: "60%" },
+      legend: { position: "none" },
+      colors: ["#7B68EE"],
+      hAxis: { title: "Mes" },
+      vAxis: {
+        title: "Total Ventas (Q)",
+        format: "#,##0.00"
+      },
+      annotations: {
+        alwaysOutside: false,
+        textStyle: { fontSize: 10, color: "#333" }
+      }
+    };
+    var chart = new google.visualization.ColumnChart(
+      document.getElementById("chart_ventas_mes")
+    );
+    chart.draw(dataTable, options);
+  });
+}
+
+function ventasPorMes(anioSeleccionado) {
+  var hasChart = document.getElementById("chart_ventas_mes");
+  var hasTable = document.getElementById("tblVentasPorMes");
+  if (!hasChart && !hasTable) return;
+
+  var anio = anioSeleccionado || $("#ventasMesAnio").val() || $("#ventasTablaAnio").val() || new Date().getFullYear();
+  $("#ventasMesAnio").val(anio);
+  $("#ventasTablaAnio").val(anio);
   $("#ventasMesTitulo").text("Año " + anio);
+
+  if (hasTable) {
+    $("#tblVentasPorMesBody").html(
+      '<tr><td colspan="3" class="text-center"><i class="fa fa-spinner fa-spin"></i> Cargando...</td></tr>'
+    );
+  }
 
   var params = {
     service: "ventasPorMes",
@@ -1906,58 +2011,15 @@ function ventasPorMes() {
     "controllers/adminController.php",
     params,
     function (data) {
-      var meses = [
-        "", "Ene", "Feb", "Mar", "Abr", "May", "Jun",
-        "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
-      ];
-
-      // Construir array de datos para Google Charts
-      var chartData = [["Mes", "Total Ventas", { role: "annotation" }]];
-      var totalesPorMes = {};
-
-      if (data && data.length > 0) {
-        $.each(data, function (key, val) {
-          totalesPorMes[parseInt(val.mes)] = parseFloat(val.totalVentas);
-        });
-      }
-
-      // Asegurarse de incluir los 12 meses (con 0 si no hay ventas)
-      for (var m = 1; m <= 12; m++) {
-        var total = totalesPorMes[m] || 0;
-        chartData.push([
-          meses[m],
-          total,
-          total > 0 ? accounting.formatNumber(total, 2) : ""
-        ]);
-      }
-
-      if (!hasGoogleCharts()) return;
-      google.charts.load("current", { packages: ["corechart"] });
-      google.charts.setOnLoadCallback(function () {
-        var dataTable = google.visualization.arrayToDataTable(chartData);
-        var options = {
-          title: "",
-          width: "100%",
-          height: 320,
-          bar: { groupWidth: "60%" },
-          legend: { position: "none" },
-          colors: ["#7B68EE"],
-          hAxis: { title: "Mes" },
-          vAxis: {
-            title: "Total Ventas (Q)",
-            format: "#,##0.00"
-          },
-          annotations: {
-            alwaysOutside: false,
-            textStyle: { fontSize: 10, color: "#333" }
-          }
-        };
-        var chart = new google.visualization.ColumnChart(
-          document.getElementById("chart_ventas_mes")
-        );
-        chart.draw(dataTable, options);
-      });
+      renderVentasPorMesTabla(data);
+      drawVentasPorMesChart(data, anio);
     },
     "json"
-  );
+  ).fail(function () {
+    if (hasTable) {
+      $("#tblVentasPorMesBody").html(
+        '<tr><td colspan="3" class="text-center text-danger">No fue posible cargar las ventas del año seleccionado</td></tr>'
+      );
+    }
+  });
 }

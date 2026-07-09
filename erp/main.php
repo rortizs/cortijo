@@ -714,7 +714,7 @@ if (!empty($_SESSION['userName']) && !empty($_SESSION['idRoles'])) {
                             <header class="panel-heading">
                                 <i class="fa fa-bar-chart"></i> Ventas por Mes &nbsp;<span id="ventasMesTitulo" class="text-muted" style="font-size:13px;"></span>
                                 <div class="pull-right" style="margin-top:-4px;">
-                                    <select class="form-control input-sm" id="ventasMesAnio" onchange="ventasPorMes();" style="display:inline-block;width:90px;">
+                                    <select class="form-control input-sm" id="ventasMesAnio" onchange="ventasPorMes(this.value);" style="display:inline-block;width:90px;">
                                         <?php
                                         $anioActual = (int) date('Y');
                                         for ($a = $anioActual; $a >= 2022; $a--) {
@@ -727,6 +727,47 @@ if (!empty($_SESSION['userName']) && !empty($_SESSION['idRoles'])) {
                             </header>
                             <div class="panel-body">
                                 <div id="chart_ventas_mes" style="height:350px;"></div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- VENTAS POR MES - TABLA -->
+                    <div class="col-sm-12">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                <i class="fa fa-table"></i> Ventas Totales por Mes
+                                <div class="pull-right" style="margin-top:-4px;">
+                                    <select class="form-control input-sm" id="ventasTablaAnio" onchange="ventasPorMes(this.value);" style="display:inline-block;width:90px;">
+                                        <?php
+                                        $anioActual = (int) date('Y');
+                                        for ($a = $anioActual; $a >= 2022; $a--) {
+                                            $sel = ($a == $anioActual) ? 'selected' : '';
+                                            echo "<option value=\"$a\" $sel>$a</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </header>
+                            <div class="panel-body table-responsive">
+                                <table class="table table-striped table-bordered table-condensed" id="tblVentasPorMes">
+                                    <thead>
+                                        <tr>
+                                            <th>Mes</th>
+                                            <th class="text-right">Cantidad de ventas</th>
+                                            <th class="text-right">Total ventas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblVentasPorMesBody">
+                                        <tr><td colspan="3" class="text-center"><i class="fa fa-spinner fa-spin"></i> Cargando...</td></tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <th class="text-right" id="ventasTablaTotalCantidad">0</th>
+                                            <th class="text-right" id="ventasTablaTotalMonto">0.00</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                         </section>
                     </div>

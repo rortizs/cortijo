@@ -45,7 +45,13 @@ $getRecord = $dynamic->getRecord($dbS, $table, $field, $value);
                     for ($b = 0; $b < count($dataTable); $b++) {
                         $editor.="<option value=" . $dataTable[$b][$selectTable[0]['COLUMN_NAME']] . ">" . $dataTable[$b][$selectTable[1]['COLUMN_NAME']] . "</option>";
                     }
+                    if ($table == 'empresas' && $tableStructure[$a]['COLUMN_NAME'] == 'idPaises' && count($dataTable) == 0) {
+                        $editor.="<option value='0' disabled>Catálogo de países vacío</option>";
+                    }
                     $editor .="</select>";
+                    if ($table == 'empresas' && $tableStructure[$a]['COLUMN_NAME'] == 'idPaises' && count($dataTable) == 0) {
+                        $editor.="<div class='text-danger small' style='margin-top:4px;'>El catálogo de países está vacío. Guatemala debe agregarse al catálogo antes de guardar la empresa.</div>";
+                    }
                     break;
                 case 'varchar':
                     $transformText = "";
