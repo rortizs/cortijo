@@ -2015,5 +2015,11 @@ function ventasPorMes(anioSeleccionado) {
       drawVentasPorMesChart(data, anio);
     },
     "json"
-  );
+  ).fail(function () {
+    if (hasTable) {
+      $("#tblVentasPorMesBody").html(
+        '<tr><td colspan="3" class="text-center text-danger">No fue posible cargar las ventas del año seleccionado</td></tr>'
+      );
+    }
+  });
 }

@@ -77,7 +77,7 @@ function runDashboardVentasPorMesScenario() {
       { mes: '1', cantidadVentas: '2', totalVentas: '15.50' },
       { mes: '3', cantidadVentas: '3', totalVentas: '5.25' },
     ]);
-    return { done() { return this; } };
+    return { done() { return this; }, fail() { return this; } };
   };
 
   const context = {
