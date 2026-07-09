@@ -714,7 +714,7 @@ if (!empty($_SESSION['userName']) && !empty($_SESSION['idRoles'])) {
                             <header class="panel-heading">
                                 <i class="fa fa-bar-chart"></i> Ventas por Mes &nbsp;<span id="ventasMesTitulo" class="text-muted" style="font-size:13px;"></span>
                                 <div class="pull-right" style="margin-top:-4px;">
-                                    <select class="form-control input-sm" id="ventasMesAnio" onchange="ventasPorMes();" style="display:inline-block;width:90px;">
+                                    <select class="form-control input-sm" id="ventasMesAnio" onchange="ventasPorMes(this.value);" style="display:inline-block;width:90px;">
                                         <?php
                                         $anioActual = (int) date('Y');
                                         for ($a = $anioActual; $a >= 2022; $a--) {
@@ -737,7 +737,7 @@ if (!empty($_SESSION['userName']) && !empty($_SESSION['idRoles'])) {
                             <header class="panel-heading">
                                 <i class="fa fa-table"></i> Ventas Totales por Mes
                                 <div class="pull-right" style="margin-top:-4px;">
-                                    <select class="form-control input-sm" id="ventasTablaAnio" onchange="ventasPorMesTabla();" style="display:inline-block;width:90px;">
+                                    <select class="form-control input-sm" id="ventasTablaAnio" onchange="ventasPorMes(this.value);" style="display:inline-block;width:90px;">
                                         <?php
                                         $anioActual = (int) date('Y');
                                         for ($a = $anioActual; $a >= 2022; $a--) {

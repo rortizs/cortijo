@@ -10,6 +10,18 @@
 --   executed by GitHub Actions deploy.
 --   Target tenant database: erp_elcortijo.
 
+-- Fail before any tenant data mutation if the active database is not Cortijo.
+-- The wrong-DB branch deliberately selects from a non-existent table so mysql
+-- clients abort before START TRANSACTION/INSERT/UPDATE.
+SET @ensure_guatemala_country_db_guard = IF(
+    DATABASE() = 'erp_elcortijo',
+    'SELECT ''Database guard OK: erp_elcortijo'' AS database_guard',
+    'SELECT ''Wrong database selected; expected erp_elcortijo'' AS database_guard FROM wrong_database_selected__expected_erp_elcortijo'
+);
+PREPARE ensure_guatemala_country_db_guard_stmt FROM @ensure_guatemala_country_db_guard;
+EXECUTE ensure_guatemala_country_db_guard_stmt;
+DEALLOCATE PREPARE ensure_guatemala_country_db_guard_stmt;
+
 START TRANSACTION;
 
 INSERT INTO paises (

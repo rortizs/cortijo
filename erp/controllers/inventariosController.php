@@ -8,11 +8,19 @@ session_start();
 date_default_timezone_set("America/Guatemala");
 require_once("../models/config.php");
 require_once("../models/dynamic.php");
+require_once("../models/admin.php");
 require_once("../models/inventarios.php");
 require_once("../models/NumberToLetterConverter.class.php");
 $dynamic = new Dynamic();
+$admin = new Admin();
 $inventarios = new Inventarios();
 $converter = new NumberToLetterConverter();
+if (empty($_SESSION['userName']) || empty($_SESSION['idRoles'])) {
+    http_response_code(401);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(array('error' => true, 'message' => 'Sesión expirada o no autorizada'));
+    exit;
+}
 $dbC = Config::$dbD;
 $dbS = $_SESSION['dbProject'];
 $service = $_REQUEST['service'];
@@ -28,14 +36,31 @@ switch ($service) {
                     }
                 }
             }
-            if ($idPaises === '' || (int) $idPaises === 0) {
+            $idPaisesNormalizado = trim((string) $idPaises);
+            if ($idPaisesNormalizado === '' || !ctype_digit($idPaisesNormalizado)) {
                 http_response_code(400);
                 header('Content-Type: application/json; charset=utf-8');
                 echo json_encode(array(
                     'error' => true,
-                    'message' => 'Debe seleccionar un país válido antes de guardar la empresa. Si Guatemala no aparece, primero debe reparar el catálogo de países.'
+                    'message' => 'Debe seleccionar un país válido antes de guardar la empresa; el país seleccionado no existe en el catálogo. Si Guatemala no aparece, primero debe reparar el catálogo de países.'
                 ));
                 exit;
+            }
+            $idPaises = (int) $idPaisesNormalizado;
+            if ($idPaises <= 0 || !$admin->paisExiste($idPaises)) {
+                http_response_code(400);
+                header('Content-Type: application/json; charset=utf-8');
+                echo json_encode(array(
+                    'error' => true,
+                    'message' => 'Debe seleccionar un país válido antes de guardar la empresa; el país seleccionado no existe en el catálogo. Si Guatemala no aparece, primero debe reparar el catálogo de países.'
+                ));
+                exit;
+            }
+            foreach ($_POST['data'] as $indiceCampo => $campoEmpresa) {
+                if (isset($campoEmpresa['idPaises'])) {
+                    $_POST['data'][$indiceCampo]['idPaises'] = (string) $idPaises;
+                    break;
+                }
             }
         }
         $tableStructure = $dynamic->tableStructure($dbC, $dbS, $_POST['table']);

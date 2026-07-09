@@ -12,6 +12,21 @@ require_once "agenciasViajes.php";
 
 class Admin extends General {
 
+	public function paisExiste($idPais) {
+		$idPais = (int) $idPais;
+		if ($idPais <= 0) {
+			return false;
+		}
+		$this->resultado = null;
+		$sql = "SELECT id FROM paises WHERE id = " . $idPais . " LIMIT 1;";
+		$query = mysql_query($sql, dbCon::conPrincipal());
+		if (!$query) {
+			return false;
+		}
+		$reg = mysql_fetch_assoc($query);
+		return ($reg && isset($reg['id']));
+	}
+
 	public function getConfPaisEmpresa($idEmpresas) {
 		$this->resultado = null;
 		$sql = "SELECT
