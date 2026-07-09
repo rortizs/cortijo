@@ -37,6 +37,16 @@ $(document).ready(function () {
       $(".navbar-collapse").collapse("toggle");
     }
   });
+  $("#fechaInicio,#fechaFin,#fechaInicioM,#fechaFinM").datetimepicker({
+    pickTime: false,
+    format: "DD-MM-YYYY",
+  });
+
+  var hasDashboardWidgets = $("#ventasHoy, #ventasMesHoy, #comprasMesHoy, #utilidadMesHoy, #inventarioVenta, #ultimos7dias, #top10hoy, #totalDtes, #chart_ventas_mes, #chart_dte").length > 0;
+  if (!hasDashboardWidgets) {
+    return;
+  }
+
   resumenDocumentosOperados();
   ventasPorMes();
   ventasPorMesTabla();
@@ -57,10 +67,6 @@ $(document).ready(function () {
   } else {
     $(".depositosDetalle").hide();
   }
-  $("#fechaInicio,#fechaFin,#fechaInicioM,#fechaFinM").datetimepicker({
-    pickTime: false,
-    format: "DD-MM-YYYY",
-  });
   ventasHoy("Hoy");
   ventasHoy("Ayer");
   ventasHoy("MesHoy");
@@ -1501,6 +1507,9 @@ function obtenerNombreMes(numeroMes) {
 }
 
 function totalDtes() {
+  if ($("#totalDtes").length === 0) {
+    return;
+  }
   $("#totalDtes tbody").html("");
   params = {
     service: "totalDtes",
@@ -1514,7 +1523,7 @@ function totalDtes() {
       var sumaDiasFacturados = 0;
       var sumaFacturacionPorDia = 0;
 
-      $.each(data, function (key, val) {
+      $.each(data || [], function (key, val) {
         sumaTotal += parseInt(val.total);
         sumaDiasFacturados += parseInt(val.diasFacturados);
         sumaFacturacionPorDia += parseInt(val.facturacionPorDia);
