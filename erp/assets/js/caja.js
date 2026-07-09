@@ -921,41 +921,79 @@ function cerrarVenta() {
     });
 //    console.log(params);
 //    return false;
+    var printWindow = null;
+    try {
+        printWindow = window.open("", "_blank");
+    } catch (e) {
+        printWindow = null;
+    }
+
+    function openInvoiceUrl(url) {
+        if (printWindow && !printWindow.closed) {
+            printWindow.location = url;
+            return true;
+        }
+
+        var fallbackWindow = window.open(url);
+        if (!fallbackWindow) {
+            alert('El navegador bloqueó la pestaña de impresión. Habilite las ventanas emergentes para este sitio y abra la factura desde consulta de facturas.');
+        }
+        return !!fallbackWindow;
+    }
+
+    function closeInvoiceWindow() {
+        if (printWindow && !printWindow.closed) {
+            printWindow.close();
+        }
+    }
+
+    function finishInvoiceError(message) {
+        closeInvoiceWindow();
+        $("#loader").hide();
+        $("#btnImprimir").attr({ disabled: false });
+        alert(message);
+    }
+
     $.post('controllers/cajaController.php', params, function (data) {
+        if (!data || data.length === 0) {
+            finishInvoiceError('No fue posible obtener la respuesta de facturación, verifique si la venta fue generada antes de intentar de nuevo');
+            return false;
+        }
+
         $.each(data, function (key, val) {
             switch (val.message) {
                 case 'success':
                     switch (dbProject) {
                         case 'pos_doanbo':
                             var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=normal";
-                            window.open(url);
+                            openInvoiceUrl(url);
                             location.reload();
                             break;
                         case 'pos_fashiongt':
                             var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=normal";
-                            window.open(url);
+                            openInvoiceUrl(url);
                             location.reload();
                             break;
                         case 'erp_cubix':
                             var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=normal";
-                            window.open(url);
+                            openInvoiceUrl(url);
                             location.reload();
                             break;
                         case 'pos_completehydralicseals':
                             var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta;
-                            window.open(url);
+                            openInvoiceUrl(url);
                             location.reload();
                             break;
                         case 'pos_plastica':
                             var url = `FEL_PLASTICA.php?idVentas=${val.idVenta}`;
-                            window.open(url);
+                            openInvoiceUrl(url);
                             setTimeout(function () {
                                 location.reload();
                             }, 5000);
                             break;
                         case 'erp_planetabebe':
                             var url = `FEL_PB.php?idVentas=${val.idVenta}`;
-                            window.open(url);
+                            openInvoiceUrl(url);
                             setTimeout(function () {
                                 location.reload();
                             }, 5000);
@@ -963,11 +1001,11 @@ function cerrarVenta() {
                         case 'erp_elohim':
                             if ($("#idSucursales").val() === '13') {
                                 var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=ticket";
-                                window.open(url);
+                                openInvoiceUrl(url);
                                 location.reload();
                             } else {
                                 var url = `FEL_ELOHIM.php?idVentas=${val.idVenta}`;
-                                window.open(url);
+                                openInvoiceUrl(url);
                                 setTimeout(function () {
                                     location.reload();
                                 }, 5000);
@@ -975,31 +1013,31 @@ function cerrarVenta() {
                             break;
                         case 'pos_doanbo':
                             var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta;
-                            window.open(url);
+                            openInvoiceUrl(url);
                             location.reload();
                             break;
                         case 'erp_constructorajimenez':
                             var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=normal";
-                            window.open(url);
+                            openInvoiceUrl(url);
                             location.reload();
                             break;
                         case 'erp_elsiglo':
                             var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=ticket";
-                            window.open(url);
+                            openInvoiceUrl(url);
                             location.reload();
                             break;
                         case 'erp_inversionesyproyectos':
                             var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=ticket";
-                            window.open(url);
+                            openInvoiceUrl(url);
                             location.reload();
                             break;
                         case 'pos_alimelmar':
                             if (accounting.unformat($("#tipoTransaccion option:selected").val()) === 1) {
                                 var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=ticket";
-                                window.open(url);
+                                openInvoiceUrl(url);
                             } else {
                                 var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=recibo";
-                                window.open(url);
+                                openInvoiceUrl(url);
                             }
                             location.reload();
                             break;
@@ -1016,7 +1054,7 @@ function cerrarVenta() {
                                     url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=cambiaria";
                                     break;
                             }
-                            window.open(url);
+                            openInvoiceUrl(url);
                             location.reload();
                             break;
                         case 'erp_provegas':
@@ -1025,7 +1063,7 @@ function cerrarVenta() {
                             } else {
                                 var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=provegas2";
                             }
-                            window.open(url);
+                            openInvoiceUrl(url);
                             location.reload();
                             break;
                         default:
@@ -1037,18 +1075,19 @@ function cerrarVenta() {
 //                                window.open(url);
 //                            }
                             var url = pathJasper + "formatoFactura.php?idVenta=" + val.idVenta + "&modulo=normal";
-                            window.open(url);
+                            openInvoiceUrl(url);
                             location.reload();
                             break;
                     }
                     break;
                 default:
-                    alert(`Error FEL: ${val.message}`);
-                    $("#loader").hide();
+                    finishInvoiceError(`Error FEL: ${val.message}`);
                     break;
             }
         });
-    }, 'json');
+    }, 'json').fail(function () {
+        finishInvoiceError('No fue posible completar la facturación por un error de comunicación, verifique si la venta fue generada antes de intentar de nuevo');
+    });
 }
 //
 //
